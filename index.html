@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zalseef Estates - Land Buying and Selling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body { 
+            line-height: 1.6; 
+            color: #333; 
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+        
+        a { 
+            text-decoration: none; 
+            color: inherit; 
+        }
+        
+        section { 
+            padding: 80px 20px; 
+        }
+        
+        h1, h2, h3 { 
+            color: #064663; 
+            font-weight: 700;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+        }
+        
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #1e90ff;
+            border-radius: 2px;
+        }
+
+        /* Header and Navigation */
+        header {
+            background-color: #064663;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 50px; /* Adjust based on your logo's aspect ratio */
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 30px;
+        }
+
+        .nav-menu a {
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #1e90ff;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 20px;
+            }
+            
+            .logo-img {
+                height: 40px; /* Smaller logo on mobile */
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: #064663;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 30px;
+                transition: 0.5s;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 15px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('pop.jpg') no-repeat center center/cover;
+            height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            margin-top: 70px;
+        }
+        
+        .hero h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero p { 
+            font-size: 1.4rem; 
+            margin-bottom: 40px;
+            max-width: 700px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #1e90ff;
+            color: white;
+            border-radius: 30px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: 2px solid transparent;
+        }
+        
+        .btn:hover { 
+            background: transparent;
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: #1e90ff;
+        }
+
+        /* About Us */
+        .about { 
+            background: white;
+            text-align: center;
+        }
+        
+        .about p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        /* CEO Section */
+        .ceo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+            background: #f5f9ff;
+            padding: 40px;
+            border-radius: 15px;
+        }
+
+        .ceo-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #1e90ff;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .ceo-info {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .ceo-info h3 {
+            color: #064663;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .ceo-info p.position {
+            color: #1e90ff;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .ceo-info p.message {
+            color: #555;
+            font-style: italic;
+            line-height: 1.7;
+        }
+
+        /* Properties */
+        .properties-container {
+            background: #f0f8ff;
+        }
+        
+        .properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .property-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .property-card:hover { 
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .property-card img { 
+            width: 100%; 
+            height: 220px; 
+            object-fit: cover;
+        }
+        
+        .property-card .info { 
+            padding: 25px; 
+        }
+        
+        .property-card h3 { 
+            margin-bottom: 10px; 
+            font-size: 1.4rem;
+        }
+        
+        .property-card p { 
+            font-size: 1rem; 
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .property-card .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e90ff;
+            margin-bottom: 15px;
+        }
+        
+        .property-card .btn { 
+            margin-top: 10px; 
+            display: block; 
+            text-align: center;
+            padding: 12px;
+            margin: 0;
+        }
+
+        /* Why Choose Us */
+        .why-us {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .why-us div {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .why-us div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .why-us i {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .why-us i.fa-hand-holding-usd {
+            color: #4CAF50; /* Money green */
+        }
+        
+        .why-us i.fa-shield-alt {
+            color: #2196F3; /* Trust blue */
+        }
+        
+        .why-us i.fa-map-marker-alt {
+            color: #F44336; /* Location red */
+        }
+        
+        .why-us i.fa-headset {
+            color: #9C27B0; /* Support purple */
+        }
+        
+        .why-us h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Location Map */
+        .location {
+            background: white;
+        }
+        
+        .map-container {
+            height: 500px;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Contact Section */
+        .contact { 
+            background: #064663; 
+            color: white; 
+        }
+        
+        .contact .section-title {
+            color: white;
+        }
+        
+        .contact .section-title:after {
+            background: white;
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .contact-info {
+            margin-bottom: 30px;
+        }
+        
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Contact Information Icons */
+        .contact-info i.fa-map-marker-alt {
+            color: #FF0000; /* Red for location */
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .contact-info i.fa-phone-alt {
+            color: #25D366; /* Green for phone */
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .contact-info i.fa-envelope {
+            color: #FFFFFF; /* White for email */
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        /* Social Media Icons */
+        .social-links {
+            display: flex;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .social-links .fa-youtube {
+            color: #FF0000; /* YouTube Red */
+        }
+        
+        .social-links .fa-whatsapp {
+            color: #25D366; /* WhatsApp Green */
+        }
+        
+        .social-links .fa-tiktok {
+            color: #000000; /* TikTok Black */
+        }
+        
+        .social-links .fa-instagram {
+            color: #E1306C; /* Instagram Pink */
+        }
+        
+        .contact form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .contact input, 
+        .contact textarea,
+        .contact select {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .contact textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .contact button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            background: #1e90ff;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .contact button:hover { 
+            background: #145a86;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #033649;
+            color: white;
+        }
+        
+        footer p {
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 20px;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: #064663;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 30px;
+                transition: 0.5s;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 15px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .map-container {
+                height: 350px;
+            }
+            
+            .ceo-section {
+                padding: 30px 20px;
+            }
+            
+            .ceo-image {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <a href="#" class="logo">
+                <img src="zalseef.jpg" alt="Zalseef Estates Logo" class="logo-img">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#properties">Properties</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Your Trusted Land Partners</h1>
+            <p>Premium land buying and selling services with transparent deals and prime locations across Mbarara</p>
+            <div>
+                <a href="tel:+256708124902" class="btn"><i class="fas fa-phone-alt"></i> Call Us</a>
+                <a href="https://wa.me/256708124902" class="btn btn-outline"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="#properties" class="btn"><i class="fas fa-map-marked-alt"></i> View Lands</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">About Zalseef Estates</h2>
+            <p>Zalseef Estates is your trusted partner in land acquisition and sales. We specialize in providing
+                affordable prices, prime locations, and a completely transparent process to make your land ownership
+                dreams a reality. With years of experience in the real estate market, we ensure every
+                transaction is secure and beneficial for our clients.</p>
+            
+            <!-- CEO Section -->
+            <div class="ceo-section">
+                <img src="jk.png" alt="CEO of Zalseef Estates" class="ceo-image">
+                <div class="ceo-info">
+                    <h3>Muhammad Muhumuza</h3>
+                    <p class="position">CEO</p>
+                    <p class="message">"At Zalseef Estates, we believe everyone deserves access to quality land at fair prices. Our mission is to make land ownership simple, secure, and rewarding for all our clients."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties -->
+    <section class="properties-container" id="properties">
+        <div class="container">
+            <h2 class="section-title">Featured Properties</h2>
+            <div class="properties">
+                <div class="property-card">
+                    <img src="OIP.webp" alt="Land">
+                    <div class="info">
+                        <h3>Prime Land in Karubanda</h3>
+                        <p class="price">UGX 25,000,000</p>
+                        <p>50x100 ft | Residential | Clear Title</p>
+                        <a href="#contact" class="btn">Inquire Now</a>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <img src="OIP (1).webp" alt="Land">
+                    <div class="info">
+                        <h3>Prime Land in Kihogo</h3>
+                        <p class="price">UGX 20,000,000</p>
+                        <p>25 x 100 ft | Commercial | Road Access</p>
+                        <a href="#contact" class="btn">Inquire Now</a>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <img src="OIP (2).webp" alt="Land">
+                    <div class="info">
+                        <h3>Prime Land in Kyiyenze</h3>
+                        <p class="price">UGX 35,000,000</p>
+                        <p>60x100 ft | Residential | Others </p>
+                        <a href="#contact" class="btn">Inquire Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">Why Choose Zalseef</h2>
+            <div class="why-us">
+                <div>
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3>Affordable Prices</h3>
+                    <p>We provide the best land deals at competitive market rates with flexible payment plans.</p>
+                </div>
+                <div>
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Trusted Deals</h3>
+                    <p>100% transparent process with verified documents and secure transactions.</p>
+                </div>
+                <div>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Prime Locations</h3>
+                    <p>Our plots are strategically located in developing areas with high appreciation potential.</p>
+                </div>
+                <div>
+                    <i class="fas fa-headset"></i>
+                    <h3>Dedicated Support</h3>
+                    <p>Personalized service from our experienced team throughout your buying journey.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Map -->
+    <section class="location">
+        <div class="container">
+            <h2 class="section-title">Our Location</h2>
+            <p class="text-center">Visit us at our office in St Paul Shopping Mall</p>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.746684393895!2d30.6599565!3d-0.60827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19d91b002818a913%3A0xab63f36fc3ccc916!2sSt%20Paul%20Shopping%20Mall!5e0!3m2!1sen!2sus!4v1719876543210!5m2!1sen!2sus" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="text-center mt-4">
+                <a href="https://maps.google.com/?q=St+Paul+Shopping+Mall,Kampala" target="_blank" class="btn" style="display: inline-block; margin-top: 20px;">
+                    <i class="fas fa-directions"></i> Get Directions
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p>Reach out to us for inquiries or to schedule a site visit.</p>
+
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Office Location </h4>
+                            <p>St Paul Shopping Mall, Room C10</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h4>Call Us</h4>
+                            <p>+256 708 124902</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email Us</h4>
+                            <p>Zalseefmhd256@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="https://www.youtube.com/@ZalseefEstates" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://wa.me/256708124902" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.tiktok.com/@zalseef_estates" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/zalseef_estates" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <h3 style="color: #064663; margin-bottom: 20px;">Send Us a Message</h3>
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <input type="tel" name="phone" placeholder="Phone Number">
+                    <select name="interest" required>
+                        <option value="" disabled selected>I'm interested in...</option>
+                        <option value="residential">Residential Land</option>
+                        <option value="commercial">Commercial Land</option>
+                        <option value="investment">Investment Opportunity</option>
+                        <option value="other">Other Inquiry</option>
+                    </select>
+                    <textarea name="message" placeholder="Your Message" required></textarea>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Zalseef Estates. All Rights Reserved.</p>
+            <p>We buy and sell plots of land, and part of our profits goes to charity.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Form submission handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Here you would typically send the form data to your server
+            // For demonstration, we'll show an alert
+            alert('Thank you for your message! We will contact you shortly.');
+            this.reset();
+            
+            // In a real implementation, you would use fetch or AJAX to send the data
+            // Example with Formspree:
+            /*
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Thank you for your message! We will contact you shortly.');
+                    this.reset();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(error => {
+                alert('There was a problem sending your message. Please try again later.');
+            });
+            */
+        });
+        
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
