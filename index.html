@@ -1,59 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zalseef Estates - Land Buying and Selling</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="description"
-      content="Zalseef Estates specializes in buying and selling  land plots across Mbarara. Find your perfect land, explore investment opportunities, and contact our estate dealers today.">
-<link rel="icon" href="zalseef.jpg" type="image/png" />
+        content="Zalseef Estates specializes in buying and selling  land plots across Mbarara. Find your perfect land, explore investment opportunities, and contact our estate dealers today.">
+    <link rel="icon" href="zalseef.jpg" type="image/png" />
     <style>
         /* General Styles */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
         }
-        
-        body { 
-            line-height: 1.6; 
-            color: #333; 
+
+        body {
+            line-height: 1.6;
+            color: #333;
             background-color: #f9f9f9;
             overflow-x: hidden;
         }
-        
-        a { 
-            text-decoration: none; 
-            color: inherit; 
+
+        a {
+            text-decoration: none;
+            color: inherit;
         }
-        
-        section { 
-            padding: 80px 20px; 
+
+        section {
+            padding: 80px 20px;
         }
-        
-        h1, h2, h3 { 
-            color: #064663; 
+
+        h1,
+        h2,
+        h3 {
+            color: #064663;
             font-weight: 700;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         .text-center {
             text-align: center;
         }
-        
+
         .section-title {
             position: relative;
             margin-bottom: 40px;
             font-size: 2.2rem;
         }
-        
+
         .section-title:after {
             content: "";
             position: absolute;
@@ -74,7 +77,7 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .header-container {
@@ -89,7 +92,7 @@
         }
 
         .logo-img {
-            height: 50px; /* Adjust based on your logo's aspect ratio */
+            height: 50px;
             width: auto;
         }
 
@@ -125,11 +128,11 @@
             .header-container {
                 padding: 0 20px;
             }
-            
+
             .logo-img {
-                height: 40px; /* Smaller logo on mobile */
+                height: 40px;
             }
-            
+
             .nav-menu {
                 position: fixed;
                 top: 80px;
@@ -143,24 +146,23 @@
                 padding-top: 30px;
                 transition: 0.5s;
             }
-            
+
             .nav-menu.active {
                 left: 0;
             }
-            
+
             .nav-menu li {
                 margin: 15px 0;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
         }
 
-        /* Hero Section */
+        /* Hero Section with Slideshow */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('pop.jpg') no-repeat center center/cover;
+            position: relative;
             height: 100vh;
             color: white;
             display: flex;
@@ -170,21 +172,76 @@
             text-align: center;
             padding: 0 20px;
             margin-top: 70px;
+            overflow: hidden;
         }
-        
-        .hero h1 { 
-            font-size: 3.5rem; 
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+            z-index: 1;
+        }
+
+        .hero-slideshow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .slide-1 {
+            background-image: url('pop.jpg');
+        }
+
+        .slide-2 {
+            background-image: url('zalseef.jpg');
+        }
+
+        .slide-3 {
+            background-image: url('land.jpg');
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        
-        .hero p { 
-            font-size: 1.4rem; 
+
+        .hero p {
+            font-size: 1.4rem;
             margin-bottom: 40px;
             max-width: 700px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
-        
+
         .btn {
             display: inline-block;
             padding: 15px 30px;
@@ -196,30 +253,30 @@
             font-weight: 600;
             border: 2px solid transparent;
         }
-        
-        .btn:hover { 
+
+        .btn:hover {
             background: transparent;
             border-color: white;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .btn-outline {
             background: transparent;
             border: 2px solid white;
         }
-        
+
         .btn-outline:hover {
             background: white;
             color: #1e90ff;
         }
 
         /* About Us */
-        .about { 
+        .about {
             background: white;
             text-align: center;
         }
-        
+
         .about p {
             max-width: 800px;
             margin: 0 auto;
@@ -245,7 +302,7 @@
             object-fit: cover;
             border: 5px solid #1e90ff;
             margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .ceo-info {
@@ -275,58 +332,58 @@
         .properties-container {
             background: #f0f8ff;
         }
-        
+
         .properties {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-top: 40px;
         }
-        
+
         .property-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: all 0.3s ease;
         }
-        
-        .property-card:hover { 
+
+        .property-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
-        
-        .property-card img { 
-            width: 100%; 
-            height: 220px; 
+
+        .property-card img {
+            width: 100%;
+            height: 220px;
             object-fit: cover;
         }
-        
-        .property-card .info { 
-            padding: 25px; 
+
+        .property-card .info {
+            padding: 25px;
         }
-        
-        .property-card h3 { 
-            margin-bottom: 10px; 
+
+        .property-card h3 {
+            margin-bottom: 10px;
             font-size: 1.4rem;
         }
-        
-        .property-card p { 
-            font-size: 1rem; 
+
+        .property-card p {
+            font-size: 1rem;
             color: #555;
             margin-bottom: 15px;
         }
-        
+
         .property-card .price {
             font-size: 1.3rem;
             font-weight: 700;
             color: #1e90ff;
             margin-bottom: 15px;
         }
-        
-        .property-card .btn { 
-            margin-top: 10px; 
-            display: block; 
+
+        .property-card .btn {
+            margin-top: 10px;
+            display: block;
             text-align: center;
             padding: 12px;
             margin: 0;
@@ -339,41 +396,41 @@
             gap: 30px;
             margin-top: 40px;
         }
-        
+
         .why-us div {
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
-        
+
         .why-us div:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        
+
         .why-us i {
             font-size: 2.5rem;
             margin-bottom: 20px;
         }
-        
+
         .why-us i.fa-hand-holding-usd {
-            color: #4CAF50; /* Money green */
+            color: #4CAF50;
         }
-        
+
         .why-us i.fa-shield-alt {
-            color: #2196F3; /* Trust blue */
+            color: #2196F3;
         }
-        
+
         .why-us i.fa-map-marker-alt {
-            color: #F44336; /* Location red */
+            color: #F44336;
         }
-        
+
         .why-us i.fa-headset {
-            color: #9C27B0; /* Support purple */
+            color: #9C27B0;
         }
-        
+
         .why-us h3 {
             margin-bottom: 15px;
             font-size: 1.3rem;
@@ -383,16 +440,16 @@
         .location {
             background: white;
         }
-        
+
         .map-container {
             height: 500px;
             width: 100%;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: 40px;
         }
-        
+
         .map-container iframe {
             width: 100%;
             height: 100%;
@@ -400,101 +457,100 @@
         }
 
         /* Contact Section */
-        .contact { 
-            background: #064663; 
-            color: white; 
+        .contact {
+            background: #064663;
+            color: white;
         }
-        
+
         .contact .section-title {
             color: white;
         }
-        
+
         .contact .section-title:after {
             background: white;
         }
-        
+
         .contact-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 50px;
             align-items: center;
         }
-        
+
         .contact-info {
             margin-bottom: 30px;
         }
-        
+
         .contact-info div {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
         }
-        
-        /* Contact Information Icons */
+
         .contact-info i.fa-map-marker-alt {
-            color: #FF0000; /* Red for location */
+            color: #FF0000;
             font-size: 1.5rem;
             margin-right: 15px;
             width: 30px;
             text-align: center;
         }
-        
+
         .contact-info i.fa-phone-alt {
-            color: #25D366; /* Green for phone */
+            color: #25D366;
             font-size: 1.5rem;
             margin-right: 15px;
             width: 30px;
             text-align: center;
         }
-        
+
         .contact-info i.fa-envelope {
-            color: #FFFFFF; /* White for email */
+            color: #FFFFFF;
             font-size: 1.5rem;
             margin-right: 15px;
             width: 30px;
             text-align: center;
         }
-        
+
         /* Social Media Icons */
         .social-links {
             display: flex;
             margin-top: 30px;
             gap: 15px;
         }
-        
+
         .social-links a {
             font-size: 1.5rem;
             transition: all 0.3s ease;
         }
-        
+
         .social-links a:hover {
             transform: translateY(-3px);
         }
-        
+
         .social-links .fa-youtube {
-            color: #FF0000; /* YouTube Red */
+            color: #FF0000;
         }
-        
+
         .social-links .fa-whatsapp {
-            color: #25D366; /* WhatsApp Green */
+            color: #25D366;
         }
-        
+
         .social-links .fa-tiktok {
-            color: #000000; /* TikTok Black */
+            color: #000000;
         }
-        
+
         .social-links .fa-instagram {
-            color: #E1306C; /* Instagram Pink */
+            color: #E1306C;
         }
-        
+
         .contact form {
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        
-        .contact input, 
+
+        .contact input,
         .contact textarea,
         .contact select {
             width: 100%;
@@ -504,12 +560,12 @@
             border-radius: 8px;
             font-size: 1rem;
         }
-        
+
         .contact textarea {
             height: 150px;
             resize: vertical;
         }
-        
+
         .contact button {
             width: 100%;
             padding: 15px;
@@ -523,11 +579,11 @@
             transition: all 0.3s ease;
             margin-top: 10px;
         }
-        
-        .contact button:hover { 
+
+        .contact button:hover {
             background: #145a86;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         footer {
@@ -536,17 +592,17 @@
             background: #033649;
             color: white;
         }
-        
+
         footer p {
             margin-bottom: 10px;
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-container {
                 padding: 0 20px;
             }
-            
+
             .nav-menu {
                 position: fixed;
                 top: 70px;
@@ -560,39 +616,39 @@
                 padding-top: 30px;
                 transition: 0.5s;
             }
-            
+
             .nav-menu.active {
                 left: 0;
             }
-            
+
             .nav-menu li {
                 margin: 15px 0;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .hero h1 {
                 font-size: 2.5rem;
             }
-            
+
             .hero p {
                 font-size: 1.2rem;
             }
-            
+
             .section-title {
                 font-size: 1.8rem;
             }
-            
+
             .map-container {
                 height: 350px;
             }
-            
+
             .ceo-section {
                 padding: 30px 20px;
             }
-            
+
             .ceo-image {
                 width: 150px;
                 height: 150px;
@@ -620,9 +676,15 @@
         </div>
     </header>
 
-    <!-- Hero -->
+    <!-- Hero with Slideshow Background -->
     <section class="hero" id="home">
-        <div class="container">
+        <div class="hero-slideshow">
+            <div class="hero-slide slide-1 active"></div>
+            <div class="hero-slide slide-2"></div>
+            <div class="hero-slide slide-3"></div>
+        </div>
+        
+        <div class="hero-content container">
             <h1>Your Trusted Land Partners</h1>
             <p>Premium land buying and selling services with transparent deals and prime locations across Mbarara</p>
             <div>
@@ -641,14 +703,16 @@
                 affordable prices, prime locations, and a completely transparent process to make your land ownership
                 dreams a reality. With years of experience in the real estate market, we ensure every
                 transaction is secure and beneficial for our clients.</p>
-            
+
             <!-- CEO Section -->
             <div class="ceo-section">
                 <img src="jk.png" alt="CEO of Zalseef Estates" class="ceo-image">
                 <div class="ceo-info">
                     <h3>Muhammad Muhumuza</h3>
                     <p class="position">CEO</p>
-                    <p class="message">"At Zalseef Estates, we believe everyone deserves access to quality land at fair prices. Our mission is to make land ownership simple, secure, and rewarding for all our clients."</p>
+                    <p class="message">"At Zalseef Estates, we believe everyone deserves access to quality land at fair
+                        prices. Our mission is to make land ownership simple, secure, and rewarding for all our
+                        clients."</p>
                 </div>
             </div>
         </div>
@@ -725,10 +789,13 @@
             <h2 class="section-title">Our Location</h2>
             <p class="text-center">Visit us at our office in St Paul Shopping Mall</p>
             <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.746684393895!2d30.6599565!3d-0.60827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19d91b002818a913%3A0xab63f36fc3ccc916!2sSt%20Paul%20Shopping%20Mall!5e0!3m2!1sen!2sus!4v1719876543210!5m2!1sen!2sus" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.746684393895!2d30.6599565!3d-0.60827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19d91b002818a913%3A0xab63f36fc3ccc916!2sSt%20Paul%20Shopping%20Mall!5e0!3m2!1sen!2sus!4v1719876543210!5m2!1sen!2sus"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <div class="text-center mt-4">
-                <a href="https://maps.google.com/?q=St+Paul+Shopping+Mall,Kampala" target="_blank" class="btn" style="display: inline-block; margin-top: 20px;">
+                <a href="https://maps.google.com/?q=St+Paul+Shopping+Mall,Kampala" target="_blank" class="btn"
+                    style="display: inline-block; margin-top: 20px;">
                     <i class="fas fa-directions"></i> Get Directions
                 </a>
             </div>
@@ -769,10 +836,13 @@
                     </div>
 
                     <div class="social-links">
-                        <a href="https://www.youtube.com/@ZalseefEstates" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.youtube.com/@ZalseefEstates" target="_blank"><i
+                                class="fab fa-youtube"></i></a>
                         <a href="https://wa.me/256708124902" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                        <a href="https://www.tiktok.com/@zalseef_estates" target="_blank"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://www.instagram.com/zalseef_estates" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@zalseef_estates" target="_blank"><i
+                                class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/zalseef_estates" target="_blank"><i
+                                class="fab fa-instagram"></i></a>
                     </div>
                 </div>
 
@@ -806,13 +876,13 @@
         // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navMenu = document.getElementById('navMenu');
-        
+
         mobileMenuBtn.addEventListener('click', () => {
             navMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') ? 
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') ?
                 '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         });
-        
+
         // Close menu when clicking a link
         document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
@@ -820,19 +890,19 @@
                 mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             });
         });
-        
+
         // Form submission handler
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             // Get form data
             const formData = new FormData(this);
-            
+
             // Here you would typically send the form data to your server
             // For demonstration, we'll show an alert
             alert('Thank you for your message! We will contact you shortly.');
             this.reset();
-            
+
             // In a real implementation, you would use fetch or AJAX to send the data
             // Example with Formspree:
             /*
@@ -856,15 +926,30 @@
             });
             */
         });
-        
+
         // Smooth scrolling for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
+        });
+
+        // Hero Slideshow
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+            
+            function showNextSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Change slide every 5 seconds
+            setInterval(showNextSlide, 5000);
         });
     </script>
 </body>
