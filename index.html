@@ -221,7 +221,7 @@
         }
 
         .slide-3 {
-            background-image: url('land.jpg');
+            background-image: url('land2.jpg');
         }
 
         .hero-content {
@@ -326,6 +326,75 @@
             color: #555;
             font-style: italic;
             line-height: 1.7;
+        }
+
+        /* Welcome Video Section */
+        .welcome-video {
+            background: #f5f9ff;
+            padding: 80px 20px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+        }
+
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-container iframe,
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .mute-toggle {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .mute-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .mute-toggle i {
+            font-size: 1.2rem;
+        }
+
+        .video-caption {
+            text-align: center;
+            color: #555;
+            font-style: italic;
+            margin-top: 20px;
         }
 
         /* Properties */
@@ -434,6 +503,89 @@
         .why-us h3 {
             margin-bottom: 15px;
             font-size: 1.3rem;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            background: #f9f9f9;
+            padding: 80px 20px;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-content {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .quote-icon {
+            color: #1e90ff;
+            font-size: 2rem;
+            opacity: 0.2;
+            position: absolute;
+            top: -10px;
+            left: -5px;
+        }
+
+        .testimonial-content p {
+            font-style: italic;
+            color: #555;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .client-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .client-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 3px solid #1e90ff;
+        }
+
+        .client-info h4 {
+            color: #064663;
+            margin-bottom: 5px;
+        }
+
+        .client-location {
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .rating {
+            color: #FFD700;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Location Map */
@@ -683,13 +835,14 @@
             <div class="hero-slide slide-2"></div>
             <div class="hero-slide slide-3"></div>
         </div>
-        
+
         <div class="hero-content container">
             <h1>Your Trusted Land Partners</h1>
             <p>Premium land buying and selling services with transparent deals and prime locations across Mbarara</p>
             <div>
                 <a href="tel:+256708124902" class="btn"><i class="fas fa-phone-alt"></i> Call Us</a>
-                <a href="https://wa.me/256708124902" class="btn btn-outline"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="https://wa.me/256708124902" class="btn btn-outline"><i class="fab fa-whatsapp"></i>
+                    WhatsApp</a>
                 <a href="#properties" class="btn"><i class="fas fa-map-marked-alt"></i> View Lands</a>
             </div>
         </div>
@@ -718,35 +871,93 @@
         </div>
     </section>
 
+    <!-- Welcome Video Section -->
+    <section class="welcome-video">
+        <div class="container">
+            <h2 class="section-title">Welcome from Our CEO</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <!-- Updated YouTube embed with working parameters -->
+                    <iframe width="100%" height="500"
+                        src="https://www.youtube.com/embed/_Q_JlHjsfyw?autoplay=0&mute=1&enablejsapi=1&rel=0"
+                        frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen id="welcomeVideo"></iframe>
+                    <button class="mute-toggle" id="muteToggle">
+                        <i class="fas fa-volume-mute"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="video-caption">Muhammad Muhumuza introduces Zalseef Estates and our commitment to you</p>
+        </div>
+    </section>
+
     <!-- Properties -->
     <section class="properties-container" id="properties">
         <div class="container">
             <h2 class="section-title">Featured Properties</h2>
             <div class="properties">
+                <!-- Property 1 -->
                 <div class="property-card">
-                    <img src="OIP.webp" alt="Land">
+                    <img src="OIP.webp" alt="Land in Karubanda">
                     <div class="info">
                         <h3>Prime Land in Karubanda</h3>
-                        <p class="price">UGX 25,000,000</p>
-                        <p>50x100 ft | Residential | Clear Title</p>
+                        <p class="price">UGX 7,000,000</p>
+                        <p>25x70 ft | Commercial | Clear Title</p>
                         <a href="#contact" class="btn">Inquire Now</a>
                     </div>
                 </div>
+
+                <!-- Property 2 -->
                 <div class="property-card">
-                    <img src="OIP (1).webp" alt="Land">
+                    <img src="OIP (1).webp" alt="Land in Kihogo">
                     <div class="info">
                         <h3>Prime Land in Kihogo</h3>
-                        <p class="price">UGX 20,000,000</p>
-                        <p>25 x 100 ft | Commercial | Road Access</p>
+                        <p class="price">UGX 7,000,000</p>
+                        <p>35 x 50 ft | Commercial | Road Access</p>
                         <a href="#contact" class="btn">Inquire Now</a>
                     </div>
                 </div>
+
+                <!-- Property 3 -->
                 <div class="property-card">
-                    <img src="OIP (2).webp" alt="Land">
+                    <img src="OIP (2).webp" alt="Land in Rubeho">
                     <div class="info">
-                        <h3>Prime Land in Kyiyenze</h3>
-                        <p class="price">UGX 35,000,000</p>
-                        <p>60x100 ft | Residential | Others </p>
+                        <h3>Prime Land in Rubeho</h3>
+                        <p class="price">UGX 5,500,000</p>
+                        <p>25x100 ft | Residential | Utilities Available</p>
+                        <a href="#contact" class="btn">Inquire Now</a>
+                    </div>
+                </div>
+
+                <!-- Property 4 -->
+                <div class="property-card">
+                    <img src="land3.jpg" alt="Land in Karubanda">
+                    <div class="info">
+                        <h3>Prime Land in Karubanda</h3>
+                        <p class="price">UGX 6,000,000</p>
+                        <p>25x50 ft | Commercial | Fertile Soil</p>
+                        <a href="#contact" class="btn">Inquire Now</a>
+                    </div>
+                </div>
+
+                <!-- Property 5 -->
+                <div class="property-card">
+                    <img src="land4.jpg" alt="Land in Karubanda">
+                    <div class="info">
+                        <h3>Prime Land in Karubanda</h3>
+                        <p class="price">UGX 4,000,000</h3>
+                        <p>35x50 ft | Commercial | Near Road</p>
+                        <a href="#contact" class="btn">Inquire Now</a>
+                    </div>
+                </div>
+
+                <!-- Property 6 -->
+                <div class="property-card">
+                    <img src="land5.jpg" alt="Land in Nyarubungo">
+                    <div class="info">
+                        <h3>Prime Land in Nyarubungo</h3>
+                        <p class="price">UGX 7,000,000</p>
+                        <p>50x100 ft | Commercial</p>
                         <a href="#contact" class="btn">Inquire Now</a>
                     </div>
                 </div>
@@ -778,6 +989,83 @@
                     <i class="fas fa-headset"></i>
                     <h3>Dedicated Support</h3>
                     <p>Personalized service from our experienced team throughout your buying journey.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonial-grid">
+
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p>Zalseef Estates made my land buying experience seamless. Their team was professional and
+                            guided me through every step of the process.</p>
+                    </div>
+                    <div class="client-info">
+                        <img src="client1.jpg" alt="Robert K." class="client-img">
+                        <div>
+                            <h4>Mary A.</h4>
+                            <p class="client-location">Mbarara</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p>I was hesitant at first, but Zalseef proved to be trustworthy. The documents were genuine and
+                            the transaction was transparent. Highly recommend!</p>
+                    </div>
+                    <div class="client-info">
+                        <img src="client2.jpg" alt="Sarah N." class="client-img">
+                        <div>
+                            <h4>Sarah N.</h4>
+                            <p class="client-location">Kampala</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p>The after-sales support is exceptional. Even after purchasing, they helped me with surveying
+                            and documentation. True professionals!</p>
+                    </div>
+                    <div class="client-info">
+                        <img src="client2.jpg" alt="David M." class="client-img">
+                        <div>
+                            <h4>Mercy A.</h4>
+                            <p class="client-location">Mbarara</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -938,19 +1226,71 @@
         });
 
         // Hero Slideshow
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const slides = document.querySelectorAll('.hero-slide');
             let currentSlide = 0;
-            
+
             function showNextSlide() {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
                 slides[currentSlide].classList.add('active');
             }
-            
+
             // Change slide every 5 seconds
             setInterval(showNextSlide, 5000);
         });
+
+        // Video mute toggle functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const muteToggle = document.getElementById('muteToggle');
+            if (muteToggle) {
+                let player;
+                let isMuted = true;
+
+                // Load YouTube API
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                // Called when YouTube API is ready
+                function onYouTubeIframeAPIReady() {
+                    player = new YT.Player('welcomeVideo', {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+
+                function onPlayerReady(event) {
+                    // Player is ready, set initial mute state
+                    event.target.mute();
+
+                    // Click handler for mute toggle
+                    muteToggle.addEventListener('click', function () {
+                        if (isMuted) {
+                            event.target.unMute();
+                            muteToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        } else {
+                            event.target.mute();
+                            muteToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                        }
+                        isMuted = !isMuted;
+                    });
+                }
+
+                function onPlayerStateChange(event) {
+                    // Auto-play when user clicks the mute button
+                    if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PAUSED) {
+                        if (!isMuted) {
+                            event.target.playVideo();
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </body>
+
 </html>
