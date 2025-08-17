@@ -1053,7 +1053,7 @@
                             and documentation. True professionals!</p>
                     </div>
                     <div class="client-info">
-                        <img src="client2.jpg" alt="Mercy A." class="client-img">
+                        <img src="zalseef.jpg" alt="Mercy A." class="client-img">
                         <div>
                             <h4>Mercy A.</h4>
                             <p class="client-location">Mbarara</p>
@@ -1243,50 +1243,55 @@
         // Video mute toggle functionality
         document.addEventListener('DOMContentLoaded', function () {
             const muteToggle = document.getElementById('muteToggle');
-            if (muteToggle) {
-                let player;
-                let isMuted = true;
+            if (!muteToggle) return;
 
-                // Load YouTube API
+            let player;
+            let isMuted = true;
+
+            // Load YouTube API if not already loaded
+            if (!window.YT) {
                 const tag = document.createElement('script');
                 tag.src = "https://www.youtube.com/iframe_api";
                 const firstScriptTag = document.getElementsByTagName('script')[0];
                 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            }
 
-                // Called when YouTube API is ready
-                function onYouTubeIframeAPIReady() {
-                    player = new YT.Player('welcomeVideo', {
-                        events: {
-                            'onReady': onPlayerReady,
-                            'onStateChange': onPlayerStateChange
-                        }
-                    });
-                }
-
-                function onPlayerReady(event) {
-                    // Player is ready, set initial mute state
-                    event.target.mute();
-
-                    // Click handler for mute toggle
-                    muteToggle.addEventListener('click', function () {
-                        if (isMuted) {
-                            event.target.unMute();
-                            muteToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-                        } else {
-                            event.target.mute();
-                            muteToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
-                        }
-                        isMuted = !isMuted;
-                    });
-                }
-
-                function onPlayerStateChange(event) {
-                    // Auto-play when user clicks the mute button
-                    if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PAUSED) {
-                        if (!isMuted) {
-                            event.target.playVideo();
-                        }
+            // This function gets called when API is ready
+            window.onYouTubeIframeAPIReady = function () {
+                player = new YT.Player('welcomeVideo', {
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
                     }
+                });
+            };
+
+            function onPlayerReady(event) {
+                // Ensure video starts muted
+                event.target.mute();
+
+                // Set up mute toggle click handler
+                muteToggle.addEventListener('click', function () {
+                    toggleMute(event.target);
+                });
+            }
+
+            function toggleMute(player) {
+                if (isMuted) {
+                    player.unMute();
+                    muteToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                } else {
+                    player.mute();
+                    muteToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                }
+                isMuted = !isMuted;
+            }
+
+            function onPlayerStateChange(event) {
+                // Handle player state changes if needed
+                if (event.data === YT.PlayerState.ENDED) {
+                    event.target.seekTo(0);
+                    event.target.playVideo();
                 }
             }
         });
