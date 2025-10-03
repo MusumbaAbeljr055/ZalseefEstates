@@ -2193,14 +2193,213 @@ footer p {
         font-size: 1.5rem;
     }
 
-    /* Video Section */
-    .welcome-video {
-        padding: 60px 15px;
-    }
+/* Video Section Styles */
+.welcome-video {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
 
-    .video-container {
-        margin: 20px 0;
+.video-container {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.video-wrapper {
+    position: relative;
+    background: #000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+#player {
+    width: 100%;
+    height: 500px;
+    border-radius: 15px;
+}
+
+.video-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0,0,0,0.8);
+    padding: 15px 25px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.video-control-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+}
+
+.video-control-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.1);
+}
+
+.video-control-btn:active {
+    transform: scale(0.95);
+}
+
+.volume-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.volume-slider {
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.3);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #1e90ff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    background: #63b3ff;
+    transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #1e90ff;
+    cursor: pointer;
+    border: none;
+}
+
+.video-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 10;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid #1e90ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.video-caption {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+/* Hide controls when not interacting */
+.video-wrapper:not(:hover) .video-controls {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: none;
+}
+
+.video-wrapper:hover .video-controls {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: all;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    #player {
+        height: 300px;
     }
+    
+    .video-controls {
+        bottom: 10px;
+        padding: 12px 20px;
+        gap: 12px;
+    }
+    
+    .video-control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .volume-slider {
+        width: 60px;
+    }
+    
+    .video-caption {
+        font-size: 1rem;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #player {
+        height: 250px;
+    }
+    
+    .video-controls {
+        padding: 10px 15px;
+        gap: 10px;
+    }
+    
+    .video-control-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .volume-slider {
+        width: 50px;
+    }
+}
 
     /* Search Form */
     .search-form {

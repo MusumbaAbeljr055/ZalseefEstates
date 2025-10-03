@@ -74,25 +74,45 @@
         </div>
     </section>
 
-    <!-- Welcome Video Section -->
-    <section class="welcome-video">
-        <div class="container">
-            <h2 class="section-title">Welcome from Our CEO</h2>
-            <div class="video-container">
-                <div class="video-wrapper">
-                    <iframe width="100%" height="500"
-                        src="https://www.youtube.com/embed/_Q_JlHjsfyw?autoplay=0&mute=1&enablejsapi=1&rel=0"
-                        title="Welcome from Zalseef Estates CEO" frameborder="0"
-                        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen id="welcomeVideo"></iframe>
-                    <button class="mute-toggle" id="muteToggle" aria-label="Toggle video sound">
-                        <i class="fas fa-volume-mute"></i>
+   <!-- Welcome Video Section -->
+<section class="welcome-video">
+    <div class="container">
+        <h2 class="section-title">Welcome from Our CEO</h2>
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/_Q_JlHjsfyw?autoplay=0&mute=1&enablejsapi=1&rel=0"
+                    title="Welcome from Zalseef Estates CEO" frameborder="0"
+                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen id="welcomeVideo"></iframe>
+                
+                <!-- Video Controls -->
+                <div class="video-controls">
+                    <button class="video-control-btn" id="playPauseBtn" aria-label="Play video">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="video-control-btn" id="muteToggle" aria-label="Unmute video">
+                        <i class="fas fa-volume-mute" id="muteIcon"></i>
+                    </button>
+                    <div class="volume-control">
+                        <input type="range" id="volumeSlider" min="0" max="100" value="0" 
+                               aria-label="Volume control" class="volume-slider">
+                    </div>
+                    <button class="video-control-btn" id="fullscreenBtn" aria-label="Enter fullscreen">
+                        <i class="fas fa-expand"></i>
                     </button>
                 </div>
+                
+                <!-- Loading State -->
+                <div class="video-loading" id="videoLoading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading video...</p>
+                </div>
             </div>
-            <p class="video-caption">Muhammad Muhumuza introduces Zalseef Estates and our commitment to you</p>
         </div>
-    </section>
+        <p class="video-caption">Muhammad Muhumuza introduces Zalseef Estates and our commitment to you</p>
+    </div>
+</section>
 
     <!-- Property Search -->
     <section class="property-search">
