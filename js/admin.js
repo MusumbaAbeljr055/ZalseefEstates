@@ -9,270 +9,90 @@ import {
     uploadImage
 } from './firebase-config.js';
 
-// Admin Mobile Menu Class
-class AdminMobileMenu {
-    constructor() {
-        this.isOpen = false;
-        this.init();
-    }
+// Admin Mobile Toggle Implementation
+function initializeAdminMobileToggle() {
+    const adminHeader = document.querySelector('.admin-header');
+    const adminNav = document.querySelector('.admin-nav');
+    
+    if (!adminHeader || !adminNav) return;
 
-    init() {
-        this.createMobileToggle();
-        this.enhanceAdminNavigation();
-        this.addMainSiteNavigation();
-        this.addEventListeners();
-    }
+    // Create mobile toggle button
+    const toggleBtn = document.createElement('button');
+    toggleBtn.id = 'adminMobileToggle';
+    toggleBtn.className = 'admin-mobile-toggle';
+    toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    toggleBtn.setAttribute('aria-label', 'Toggle admin navigation');
+    toggleBtn.setAttribute('aria-expanded', 'false');
 
-    createMobileToggle() {
-        // Check if toggle already exists
-        if (document.getElementById('adminMobileToggle')) return;
+    // Create backdrop
+    const backdrop = document.createElement('div');
+    backdrop.className = 'admin-mobile-backdrop';
+    document.body.appendChild(backdrop);
 
-        const adminHeader = document.querySelector('.admin-header');
-        if (!adminHeader) return;
+    // Add toggle button to header
+    adminHeader.appendChild(toggleBtn);
 
-        // Create mobile toggle button
-        const toggleBtn = document.createElement('button');
-        toggleBtn.id = 'adminMobileToggle';
-        toggleBtn.className = 'admin-mobile-toggle';
+    // Toggle functionality
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = adminNav.classList.toggle('active');
+        toggleBtn.innerHTML = isExpanded ? 
+            '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        toggleBtn.classList.toggle('active');
+        toggleBtn.setAttribute('aria-expanded', isExpanded);
+        backdrop.classList.toggle('active');
+        document.body.style.overflow = isExpanded ? 'hidden' : '';
+    });
+
+    // Close menu when clicking backdrop
+    backdrop.addEventListener('click', () => {
+        adminNav.classList.remove('active');
         toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        toggleBtn.setAttribute('aria-label', 'Toggle admin navigation');
+        toggleBtn.classList.remove('active');
         toggleBtn.setAttribute('aria-expanded', 'false');
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    });
 
-        // Create header container structure
-        const headerContainer = document.createElement('div');
-        headerContainer.className = 'admin-header-container';
-        
-        const headerContent = document.createElement('div');
-        headerContent.className = 'admin-header-content';
-        
-        // Move existing header content into container
-        const existingHeader = adminHeader.querySelector('h1') || document.createElement('h1');
-        if (!adminHeader.querySelector('h1')) {
-            existingHeader.textContent = 'Admin Dashboard';
-        }
-        
-        headerContent.appendChild(existingHeader);
-        
-        // Create main site navigation
-        const mainNav = document.createElement('div');
-        mainNav.className = 'admin-main-nav';
-        mainNav.innerHTML = `
-            <a href="../index.html" class="nav-home" title="Go to Homepage">
-                <i class="fas fa-home"></i>
-                <span class="nav-text">Home</span>
-            </a>
-            <a href="../properties.html" class="nav-properties" title="View Properties">
-                <i class="fas fa-building"></i>
-                <span class="nav-text">Properties</span>
-            </a>
-            <a href="../testimonials.html" class="nav-testimonials" title="View Testimonials">
-                <i class="fas fa-star"></i>
-                <span class="nav-text">Testimonials</span>
-            </a>
-            <a href="../contact.html" class="nav-contact" title="Contact Us">
-                <i class="fas fa-envelope"></i>
-                <span class="nav-text">Contact</span>
-            </a>
-        `;
-        
-        headerContent.appendChild(mainNav);
-        headerContent.appendChild(toggleBtn);
-        headerContainer.appendChild(headerContent);
-        
-        // Replace header content
-        adminHeader.innerHTML = '';
-        adminHeader.appendChild(headerContainer);
-
-        // Create mobile backdrop
-        const backdrop = document.createElement('div');
-        backdrop.className = 'admin-mobile-backdrop';
-        document.body.appendChild(backdrop);
-    }
-
-    enhanceAdminNavigation() {
-        const adminNav = document.querySelector('.admin-nav');
-        if (!adminNav) return;
-
-        // Add main site navigation to mobile menu
-        this.addMainSiteNavigationToMobile(adminNav);
-        
-        // Add mobile-specific classes and attributes
-        adminNav.classList.add('admin-nav-mobile');
-    }
-
-    addMainSiteNavigationToMobile(adminNav) {
-        // Check if main site navigation already exists in mobile menu
-        if (adminNav.querySelector('.mobile-nav-section')) return;
-
-        // Create main site navigation section for mobile
-        const mainSiteSection = document.createElement('div');
-        mainSiteSection.className = 'mobile-nav-section';
-        mainSiteSection.innerHTML = `
-            <h3>Main Site</h3>
-            <a href="../index.html" class="nav-home" title="Go to Homepage">
-                <i class="fas fa-home"></i>
-                <span>Homepage</span>
-            </a>
-            <a href="../properties.html" class="nav-properties" title="View Properties">
-                <i class="fas fa-building"></i>
-                <span>Properties</span>
-            </a>
-            <a href="../testimonials.html" class="nav-testimonials" title="View Testimonials">
-                <i class="fas fa-star"></i>
-                <span>Testimonials</span>
-            </a>
-            <a href="../contact.html" class="nav-contact" title="Contact Us">
-                <i class="fas fa-envelope"></i>
-                <span>Contact Us</span>
-            </a>
-        `;
-
-        // Create admin section
-        const adminSection = document.createElement('div');
-        adminSection.className = 'mobile-nav-section';
-        adminSection.innerHTML = `
-            <h3>Admin Panel</h3>
-        `;
-
-        // Move existing admin links to admin section
-        const existingLinks = Array.from(adminNav.querySelectorAll('a:not(.nav-home):not(.nav-properties):not(.nav-testimonials):not(.nav-contact)'));
-        existingLinks.forEach(link => {
-            adminSection.appendChild(link);
-        });
-
-        // Add logout button to admin section
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            const logoutLink = document.createElement('a');
-            logoutLink.href = '#';
-            logoutLink.className = 'admin-logout-mobile';
-            logoutLink.innerHTML = '<i class="fas fa-sign-out-alt"></i><span>Logout</span>';
-            logoutLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                logoutBtn.click();
-                this.closeMenu();
-            });
-            adminSection.appendChild(logoutLink);
-        }
-
-        // Clear existing nav and add new structure
-        adminNav.innerHTML = '';
-        adminNav.appendChild(mainSiteSection);
-        adminNav.appendChild(adminSection);
-
-        // Enhance navigation links for mobile
-        const navLinks = adminNav.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.setAttribute('role', 'menuitem');
-            link.addEventListener('click', () => {
-                this.closeMenu();
-            });
-        });
-    }
-
-    addMainSiteNavigation() {
-        // This ensures main site navigation is available in both desktop and mobile
-        const mainNav = document.querySelector('.admin-main-nav');
-        if (!mainNav) return;
-
-        // Add event listeners to main site navigation links
-        const mainNavLinks = mainNav.querySelectorAll('a');
-        mainNavLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                console.log('Navigating to:', link.href);
-            });
-        });
-    }
-
-    addEventListeners() {
-        const toggleBtn = document.getElementById('adminMobileToggle');
-        const backdrop = document.querySelector('.admin-mobile-backdrop');
-        const adminNav = document.querySelector('.admin-nav');
-
-        if (!toggleBtn || !adminNav) return;
-
-        // Toggle button click
-        toggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleMenu();
-        });
-
-        // Backdrop click
-        if (backdrop) {
-            backdrop.addEventListener('click', () => {
-                this.closeMenu();
-            });
-        }
-
-        // Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isOpen) {
-                this.closeMenu();
-            }
-        });
-
-        // Window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768 && this.isOpen) {
-                this.closeMenu();
-            }
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (this.isOpen && !adminNav.contains(e.target) && !toggleBtn.contains(e.target)) {
-                this.closeMenu();
-            }
-        });
-    }
-
-    toggleMenu() {
-        if (this.isOpen) {
-            this.closeMenu();
-        } else {
-            this.openMenu();
-        }
-    }
-
-    openMenu() {
-        const adminNav = document.querySelector('.admin-nav');
-        const toggleBtn = document.getElementById('adminMobileToggle');
-        const backdrop = document.querySelector('.admin-mobile-backdrop');
-
-        if (adminNav && toggleBtn) {
-            adminNav.classList.add('active');
-            toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
-            toggleBtn.classList.add('active');
-            toggleBtn.setAttribute('aria-expanded', 'true');
-            
-            if (backdrop) {
-                backdrop.classList.add('active');
-            }
-
-            document.body.style.overflow = 'hidden';
-            this.isOpen = true;
-        }
-    }
-
-    closeMenu() {
-        const adminNav = document.querySelector('.admin-nav');
-        const toggleBtn = document.getElementById('adminMobileToggle');
-        const backdrop = document.querySelector('.admin-mobile-backdrop');
-
-        if (adminNav && toggleBtn) {
+    // Close menu when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (adminNav.classList.contains('active') && 
+            !adminNav.contains(e.target) && 
+            !toggleBtn.contains(e.target)) {
             adminNav.classList.remove('active');
             toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
             toggleBtn.classList.remove('active');
             toggleBtn.setAttribute('aria-expanded', 'false');
-            
-            if (backdrop) {
-                backdrop.classList.remove('active');
-            }
-
+            backdrop.classList.remove('active');
             document.body.style.overflow = '';
-            this.isOpen = false;
         }
-    }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && adminNav.classList.contains('active')) {
+            adminNav.classList.remove('active');
+            toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            toggleBtn.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            backdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Close menu on window resize (if resizing to larger screen)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && adminNav.classList.contains('active')) {
+            adminNav.classList.remove('active');
+            toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            toggleBtn.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            backdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    console.log('Admin mobile toggle initialized');
 }
 
 // Admin authentication state
@@ -283,9 +103,9 @@ onAuthStateChanged(auth, (user) => {
         loadAdminData();
         clearLoginForm(); // Clear login form after successful login
         
-        // Initialize mobile menu after user is authenticated
+        // Initialize mobile toggle after user is authenticated
         setTimeout(() => {
-            const mobileMenu = new AdminMobileMenu();
+            initializeAdminMobileToggle();
         }, 100);
     } else {
         // User is signed out
@@ -294,6 +114,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// [REST OF YOUR EXISTING CODE REMAINS EXACTLY THE SAME...]
 // Login form handler
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
