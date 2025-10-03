@@ -6,56 +6,103 @@ const FORMSPREE_CONFIG = {
     TESTIMONIAL_FORM_ID: 'xgvnybkv' // Replace with your testimonial form ID
 };
 
-// Mobile Menu Toggle
+// Mobile Menu Toggle - Enhanced with better functionality
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const navMenu = document.getElementById('navMenu');
 
-if (mobileMenuBtn && navMenu) {
-    mobileMenuBtn.addEventListener('click', () => {
-        const isExpanded = navMenu.classList.toggle('active');
-        mobileMenuBtn.innerHTML = isExpanded ?
-            '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        mobileMenuBtn.classList.toggle('active');
-        mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
-    });
-
-    // Close menu when clicking a link
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            mobileMenuBtn.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+function initializeMobileMenu() {
+    if (mobileMenuBtn && navMenu) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isExpanded = navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = isExpanded ?
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            mobileMenuBtn.classList.toggle('active');
+            mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
+            
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = isExpanded ? 'hidden' : '';
         });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeMobileMenu();
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+
+        // Close menu on window resize (if resizing to larger screen)
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+    }
+}
+
+function closeMobileMenu() {
+    if (navMenu && mobileMenuBtn) {
+        navMenu.classList.remove('active');
+        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        mobileMenuBtn.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+}
+
+// Update active link based on scroll position with throttling
+function initializeScrollSpy() {
+    let scrollTimeout;
+    
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        
+        scrollTimeout = setTimeout(() => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }, 10);
     });
 }
 
-// Update active link based on scroll position
-window.addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    let currentSection = '';
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 80;
-        if (window.scrollY >= sectionTop) {
-            currentSection = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentSection}`) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Hero Slideshow
+// Hero Slideshow with pause on hover
 document.addEventListener('DOMContentLoaded', function () {
     const slides = document.querySelectorAll('.hero-slide');
     if (slides.length > 0) {
         let currentSlide = 0;
+        let slideInterval;
 
         function showNextSlide() {
             slides[currentSlide].classList.remove('active');
@@ -63,11 +110,28 @@ document.addEventListener('DOMContentLoaded', function () {
             slides[currentSlide].classList.add('active');
         }
 
-        setInterval(showNextSlide, 5000);
+        function startSlideshow() {
+            slideInterval = setInterval(showNextSlide, 5000);
+        }
+
+        function pauseSlideshow() {
+            clearInterval(slideInterval);
+        }
+
+        // Start slideshow
+        startSlideshow();
+
+        // Pause on hover
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.addEventListener('mouseenter', pauseSlideshow);
+            hero.addEventListener('mouseleave', startSlideshow);
+            hero.addEventListener('touchstart', pauseSlideshow);
+        }
     }
 });
 
-// Property Modal Functions
+// Property Modal Functions with enhanced accessibility
 function openModal(property) {
     const modal = document.getElementById('propertyModal');
     const modalContent = document.getElementById('modalContent');
@@ -75,6 +139,7 @@ function openModal(property) {
     if (!modal || !modalContent) return;
 
     modalContent.innerHTML = `
+        <span class="modal-close" onclick="closeModal()" aria-label="Close modal">&times;</span>
         <h2>${property.title}</h2>
         <div class="modal-gallery">
             ${property.images ? property.images.map(img => 
@@ -86,7 +151,7 @@ function openModal(property) {
             <p><strong>Location:</strong> ${property.location}</p>
             <p><strong>Size:</strong> ${property.size}</p>
             <p><strong>Type:</strong> ${property.type}</p>
-            <p><strong>Status:</strong> <span class="${property.status === 'sold' ? 'sold' : 'available'}">${property.status === 'sold' ? 'Sold' : 'Available'}</span></p>
+            <p><strong>Status:</strong> <span class="status ${property.status === 'sold' ? 'sold' : 'available'}">${property.status === 'sold' ? 'Sold' : 'Available'}</span></p>
             ${property.features ? `<p><strong>Features:</strong> ${property.features.join(', ')}</p>` : ''}
             <p><strong>Description:</strong> ${property.description}</p>
             ${property.status !== 'sold' ? `
@@ -95,20 +160,35 @@ function openModal(property) {
         </div>
     `;
     modal.style.display = 'block';
-    modal.focus();
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    // Focus trap for accessibility
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+    }
 }
 
 function closeModal() {
     const modal = document.getElementById('propertyModal');
     if (modal) {
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
     }
 }
 
-// Close modal when clicking outside
+// Enhanced modal close functionality
 document.addEventListener('click', (e) => {
     const modal = document.getElementById('propertyModal');
     if (modal && e.target === modal) {
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
         closeModal();
     }
 });
@@ -117,6 +197,23 @@ document.addEventListener('click', (e) => {
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     console.log("✅ Contact form found, setting up Formspree handler");
+    
+    // Show property dropdown when buying land is selected
+    const interestSelect = contactForm.querySelector('select[name="interest"]');
+    const propertySelect = contactForm.querySelector('select[name="property_interested"]');
+    
+    if (interestSelect && propertySelect) {
+        interestSelect.addEventListener('change', function() {
+            if (this.value === 'buying' || this.value === 'site_visit') {
+                propertySelect.style.display = 'block';
+                propertySelect.setAttribute('required', 'true');
+                loadPropertiesForDropdown();
+            } else {
+                propertySelect.style.display = 'none';
+                propertySelect.removeAttribute('required');
+            }
+        });
+    }
     
     contactForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -161,6 +258,7 @@ if (contactForm) {
                 const propertySelect = document.getElementById('propertyInterested');
                 if (propertySelect) {
                     propertySelect.style.display = 'none';
+                    propertySelect.removeAttribute('required');
                 }
                 
                 console.log("✅ Formspree submission successful");
@@ -183,21 +281,6 @@ if (contactForm) {
             submitBtn.disabled = false;
         }
     });
-
-    // Show property dropdown when buying land is selected
-    const interestSelect = contactForm.querySelector('select[name="interest"]');
-    const propertySelect = contactForm.querySelector('select[name="property_interested"]');
-    
-    if (interestSelect && propertySelect) {
-        interestSelect.addEventListener('change', function() {
-            if (this.value === 'buying' || this.value === 'site_visit') {
-                propertySelect.style.display = 'block';
-                loadPropertiesForDropdown();
-            } else {
-                propertySelect.style.display = 'none';
-            }
-        });
-    }
 }
 
 // Enhanced Testimonial Form Handler with Formspree
@@ -210,7 +293,7 @@ if (testimonialForm) {
         testimonialForm.action = `https://formspree.io/f/${FORMSPREE_CONFIG.TESTIMONIAL_FORM_ID}`;
     }
     
-    // Star rating functionality
+    // Enhanced star rating functionality
     const stars = testimonialForm.querySelectorAll('.star');
     const ratingValue = testimonialForm.querySelector('#ratingValue');
     
@@ -227,6 +310,14 @@ if (testimonialForm) {
                     s.style.color = '#ddd';
                 }
             });
+        });
+
+        // Keyboard accessibility for stars
+        star.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
         });
     });
 
@@ -320,18 +411,23 @@ async function loadPropertiesForDropdown() {
     }
 }
 
-// Show message function
+// Enhanced Show message function
 function showMessage(message, type) {
     const formMessage = document.getElementById('formMessage');
     if (formMessage) {
         formMessage.textContent = message;
         formMessage.className = `message ${type}`;
         formMessage.style.display = 'block';
+        formMessage.setAttribute('aria-live', 'polite');
+        
+        // Scroll to message if it's not visible
+        formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         
         setTimeout(() => {
             formMessage.style.display = 'none';
         }, 5000);
     } else {
+        // Fallback alert
         alert(message);
     }
 }
@@ -674,32 +770,48 @@ async function loadAllTestimonials() {
     }
 }
 
+// Enhanced initialization with error handling
+function initializeWebsite() {
+    console.log("🏠 Zalseef Estates Website Initializing...");
+    
+    try {
+        // Initialize mobile menu
+        initializeMobileMenu();
+        
+        // Initialize scroll spy
+        initializeScrollSpy();
+        
+        // Load page-specific content
+        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+            console.log("📄 Loading homepage content");
+            loadFeaturedProperties();
+            loadFeaturedTestimonials();
+        }
+        
+        // Load all properties on properties page
+        if (window.location.pathname.endsWith('properties.html')) {
+            console.log("📄 Loading properties page");
+            loadAllProperties();
+        }
+        
+        // Load all testimonials on testimonials page
+        if (window.location.pathname.endsWith('testimonials.html')) {
+            console.log("📄 Loading testimonials page");
+            loadAllTestimonials();
+        }
+        
+        console.log("✅ Website initialization complete");
+    } catch (error) {
+        console.error("❌ Error during website initialization:", error);
+    }
+}
+
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("🏠 Zalseef Estates Website Initialized");
-    
-    // Load featured content on homepage
-    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-        console.log("📄 Loading homepage content");
-        loadFeaturedProperties();
-        loadFeaturedTestimonials();
-    }
-    
-    // Load all properties on properties page
-    if (window.location.pathname.endsWith('properties.html')) {
-        console.log("📄 Loading properties page");
-        loadAllProperties();
-    }
-    
-    // Load all testimonials on testimonials page
-    if (window.location.pathname.endsWith('testimonials.html')) {
-        console.log("📄 Loading testimonials page");
-        loadAllTestimonials();
-    }
-});
+document.addEventListener('DOMContentLoaded', initializeWebsite);
 
 // Make functions available globally
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.filterProperties = filterProperties;
 window.loadPropertiesForDropdown = loadPropertiesForDropdown;
+window.closeMobileMenu = closeMobileMenu;
