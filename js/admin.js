@@ -1,8 +1,163 @@
-// Mobile Enhancements for Admin Panel
+// Admin Mobile Menu Class
+class AdminMobileMenu {
+    constructor() {
+        this.isOpen = false;
+        this.init();
+    }
 
+    init() {
+        this.createMobileToggle();
+        this.enhanceAdminNavigation();
+        this.addEventListeners();
+    }
+
+    createMobileToggle() {
+        // Check if toggle already exists
+        if (document.getElementById('adminMobileToggle')) return;
+
+        const adminHeader = document.querySelector('.admin-header');
+        if (!adminHeader) return;
+
+        // Create mobile toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.id = 'adminMobileToggle';
+        toggleBtn.className = 'admin-mobile-toggle';
+        toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        toggleBtn.setAttribute('aria-label', 'Toggle admin navigation');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+
+        // Add toggle button to header
+        const headerContainer = document.createElement('div');
+        headerContainer.className = 'admin-header-container';
+        
+        // Move existing header content into container
+        const existingContent = adminHeader.innerHTML;
+        adminHeader.innerHTML = '';
+        headerContainer.innerHTML = existingContent;
+        
+        // Add toggle button and container to header
+        adminHeader.appendChild(headerContainer);
+        headerContainer.appendChild(toggleBtn);
+
+        // Create mobile backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'admin-mobile-backdrop';
+        document.body.appendChild(backdrop);
+    }
+
+    enhanceAdminNavigation() {
+        const adminNav = document.querySelector('.admin-nav');
+        if (!adminNav) return;
+
+        // Add mobile-specific classes and attributes
+        adminNav.classList.add('admin-nav-mobile');
+        
+        // Enhance navigation links for mobile
+        const navLinks = adminNav.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.setAttribute('role', 'menuitem');
+            link.addEventListener('click', () => {
+                this.closeMenu();
+            });
+        });
+    }
+
+    addEventListeners() {
+        const toggleBtn = document.getElementById('adminMobileToggle');
+        const backdrop = document.querySelector('.admin-mobile-backdrop');
+        const adminNav = document.querySelector('.admin-nav');
+
+        if (!toggleBtn || !adminNav) return;
+
+        // Toggle button click
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMenu();
+        });
+
+        // Backdrop click
+        if (backdrop) {
+            backdrop.addEventListener('click', () => {
+                this.closeMenu();
+            });
+        }
+
+        // Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.closeMenu();
+            }
+        });
+
+        // Window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && this.isOpen) {
+                this.closeMenu();
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (this.isOpen && !adminNav.contains(e.target) && !toggleBtn.contains(e.target)) {
+                this.closeMenu();
+            }
+        });
+    }
+
+    toggleMenu() {
+        if (this.isOpen) {
+            this.closeMenu();
+        } else {
+            this.openMenu();
+        }
+    }
+
+    openMenu() {
+        const adminNav = document.querySelector('.admin-nav');
+        const toggleBtn = document.getElementById('adminMobileToggle');
+        const backdrop = document.querySelector('.admin-mobile-backdrop');
+
+        if (adminNav && toggleBtn) {
+            adminNav.classList.add('active');
+            toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+            toggleBtn.classList.add('active');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            
+            if (backdrop) {
+                backdrop.classList.add('active');
+            }
+
+            document.body.style.overflow = 'hidden';
+            this.isOpen = true;
+        }
+    }
+
+    closeMenu() {
+        const adminNav = document.querySelector('.admin-nav');
+        const toggleBtn = document.getElementById('adminMobileToggle');
+        const backdrop = document.querySelector('.admin-mobile-backdrop');
+
+        if (adminNav && toggleBtn) {
+            adminNav.classList.remove('active');
+            toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            toggleBtn.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            
+            if (backdrop) {
+                backdrop.classList.remove('active');
+            }
+
+            document.body.style.overflow = '';
+            this.isOpen = false;
+        }
+    }
+}
+
+// Enhanced AdminMobileEnhancements with Mobile Menu
 class AdminMobileEnhancements {
     constructor() {
         this.isMobile = this.checkMobile();
+        this.mobileMenu = new AdminMobileMenu();
         this.init();
     }
 
@@ -12,6 +167,9 @@ class AdminMobileEnhancements {
         this.improveDataTables();
         this.enhanceImageUpload();
         this.addAdminSpecificListeners();
+        
+        // Initialize mobile menu
+        this.mobileMenu.init();
     }
 
     checkMobile() {
@@ -371,15 +529,86 @@ function addAdminMobileStyles() {
     const styles = `
         /* Admin mobile-specific enhancements */
         @media (max-width: 768px) {
+            /* Admin header and mobile toggle */
+            .admin-header-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 15px;
+            }
+            
+            .admin-mobile-toggle {
+                display: flex !important;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 10px;
+                transition: all 0.3s ease;
+                z-index: 1001;
+                -webkit-tap-highlight-color: transparent;
+                min-height: 44px;
+                min-width: 44px;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .admin-mobile-toggle:hover {
+                color: #1e90ff;
+            }
+            
+            .admin-mobile-toggle.active {
+                color: #1e90ff;
+                transform: rotate(90deg);
+            }
+            
             /* Admin navigation */
             .admin-nav {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: #2c3e50;
                 flex-direction: column;
-                gap: 8px;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: left 0.4s ease-in-out;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                z-index: 999;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                margin-top: 0;
+            }
+            
+            .admin-nav.active {
+                left: 0;
             }
             
             .admin-nav a {
-                padding: 12px 15px;
+                font-size: 1.1rem;
+                padding: 16px 25px;
+                width: 80%;
                 text-align: center;
+                border-radius: 30px;
+                display: block;
+                transition: all 0.3s ease;
+                min-height: 54px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 8px 0;
+            }
+            
+            .admin-nav a:hover,
+            .admin-nav a:focus,
+            .admin-nav a.active {
+                background: #1e90ff;
+                color: white;
+                transform: scale(1.05);
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             }
             
             /* Admin tabs */
@@ -492,6 +721,11 @@ function addAdminMobileStyles() {
                 padding: 20px 15px;
                 margin: 20px 0;
             }
+            
+            .admin-nav a {
+                font-size: 1rem;
+                padding: 14px 20px;
+            }
         }
         
         /* Admin mobile message styles */
@@ -510,6 +744,22 @@ function addAdminMobileStyles() {
             }
         }
         
+        /* Admin mobile backdrop */
+        .admin-mobile-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            display: none;
+        }
+        
+        .admin-mobile-backdrop.active {
+            display: block;
+        }
+        
         /* Safe area insets for admin */
         @supports(padding: max(0px)) {
             .admin-header,
@@ -524,6 +774,14 @@ function addAdminMobileStyles() {
             .login-container {
                 margin-left: max(15px, env(safe-area-inset-left));
                 margin-right: max(15px, env(safe-area-inset-right));
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .admin-nav a:hover,
+            .admin-mobile-toggle:hover {
+                transform: none;
             }
         }
     `;
