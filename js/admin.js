@@ -1,647 +1,534 @@
-import { 
-    auth, 
-    propertyService, 
-    inquiryService, 
-    testimonialService, 
-    signInWithEmailAndPassword, 
-    signOut, 
-    onAuthStateChanged,
-    uploadImage
-} from './firebase-config.js';
+// Mobile Enhancements for Admin Panel
 
-// Admin authentication state
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in
-        showAdminPanel();
-        loadAdminData();
-        clearLoginForm(); // Clear login form after successful login
-    } else {
-        // User is signed out
-        showLoginForm();
-        clearAdminForms(); // Clear all admin forms when logging out
+class AdminMobileEnhancements {
+    constructor() {
+        this.isMobile = this.checkMobile();
+        this.init();
     }
-});
 
-// Login form handler
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = loginForm.querySelector('#email').value;
-        const password = loginForm.querySelector('#password').value;
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-        submitBtn.disabled = true;
+    init() {
+        this.enhanceAdminNavigation();
+        this.optimizeAdminForms();
+        this.improveDataTables();
+        this.enhanceImageUpload();
+        this.addAdminSpecificListeners();
+    }
 
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            // Success - redirected by auth state change
-        } catch (error) {
-            console.error('Login error:', error);
-            showMessage('Invalid email or password', 'error');
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
+    checkMobile() {
+        return window.innerWidth <= 768;
+    }
+
+    // Enhanced admin navigation for mobile
+    enhanceAdminNavigation() {
+        const adminTabs = document.querySelectorAll('.admin-tab');
+        const adminNav = document.querySelector('.admin-nav');
+        
+        if (this.isMobile) {
+            // Make tabs more touch-friendly
+            adminTabs.forEach(tab => {
+                tab.style.minHeight = '44px';
+                tab.style.padding = '12px 15px';
+                tab.style.display = 'flex';
+                tab.style.alignItems = 'center';
+            });
+
+            // Improve admin nav links
+            if (adminNav) {
+                const navLinks = adminNav.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    link.style.minHeight = '44px';
+                    link.style.padding = '12px 15px';
+                    link.style.display = 'flex';
+                    link.style.alignItems = 'center';
+                    link.style.justifyContent = 'center';
+                });
+            }
         }
-    });
-}
 
-// Logout functionality
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-        try {
-            await signOut(auth);
-            // Forms will be cleared by the auth state change listener
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
-    });
-}
+        // Add swipe functionality for tabs on mobile
+        this.addSwipeToTabs();
+    }
 
-// Clear login form
-function clearLoginForm() {
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.reset();
-        
-        // Clear any error states
-        const inputs = loginForm.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.classList.remove('error');
+    addSwipeToTabs() {
+        if (!this.isMobile) return;
+
+        const tabContent = document.querySelector('.tab-content.active');
+        if (!tabContent) return;
+
+        let touchStartX = null;
+
+        tabContent.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
         });
-        
-        // Reset button state
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Sign In';
-        }
-    }
-}
 
-// Clear all admin forms
-function clearAdminForms() {
-    // Clear add property form
-    clearAddPropertyForm();
-    
-    // Clear any active filters or search terms
-    const searchInputs = document.querySelectorAll('input[type="search"]');
-    searchInputs.forEach(input => {
-        input.value = '';
-    });
-    
-    // Clear any selected filters
-    const selectElements = document.querySelectorAll('select');
-    selectElements.forEach(select => {
-        if (select.id !== 'imageUpload') { // Don't reset file inputs
-            select.selectedIndex = 0;
-        }
-    });
-    
-    console.log('All admin forms cleared');
-}
+        tabContent.addEventListener('touchend', (e) => {
+            if (!touchStartX) return;
 
-// Clear add property form specifically
-function clearAddPropertyForm() {
-    const addPropertyForm = document.getElementById('addPropertyForm');
-    if (addPropertyForm) {
-        addPropertyForm.reset();
-        
-        // Clear uploaded images
-        uploadedImages = [];
-        updateUploadedImagesDisplay();
-        
-        // Reset all form fields to default states
-        const featuredCheckbox = addPropertyForm.querySelector('input[name="featured"]');
-        if (featuredCheckbox) {
-            featuredCheckbox.checked = false;
-        }
-        
-        // Clear any validation errors
-        const errorElements = addPropertyForm.querySelectorAll('.error');
-        errorElements.forEach(element => {
-            element.classList.remove('error');
-        });
-        
-        const errorMessages = addPropertyForm.querySelectorAll('.error-message');
-        errorMessages.forEach(message => {
-            message.remove();
-        });
-        
-        console.log('Add property form cleared');
-    }
-}
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchStartX - touchEndX;
 
-// Show/hide sections
-function showLoginForm() {
-    document.getElementById('loginSection')?.classList.remove('hidden');
-    document.getElementById('adminSection')?.classList.add('hidden');
-    clearAdminForms(); // Clear forms when showing login
-}
-
-function showAdminPanel() {
-    document.getElementById('loginSection')?.classList.add('hidden');
-    document.getElementById('adminSection')?.classList.remove('hidden');
-    clearLoginForm(); // Clear login form when showing admin panel
-}
-
-// Tab functionality
-const adminTabs = document.querySelectorAll('.admin-tab');
-adminTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        const tabName = tab.getAttribute('data-tab');
-        switchTab(tabName);
-    });
-});
-
-function switchTab(tabName) {
-    // Update active tab
-    adminTabs.forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.getAttribute('data-tab') === tabName) {
-            tab.classList.add('active');
-        }
-    });
-
-    // Show active tab content
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    document.getElementById(`${tabName}Tab`).classList.add('active');
-
-    // Load tab-specific data
-    switch (tabName) {
-        case 'properties':
-            loadPropertiesForAdmin();
-            break;
-        case 'inquiries':
-            loadInquiries();
-            break;
-        case 'testimonials':
-            loadTestimonialsForAdmin();
-            break;
-    }
-}
-
-// Property Management
-let uploadedImages = [];
-
-// Initialize image upload functionality
-function initializeImageUpload() {
-    const imageUpload = document.getElementById('imageUpload');
-    const imageUploadArea = document.getElementById('imageUploadArea');
-    const browseFilesBtn = document.getElementById('browseFilesBtn');
-    
-    if (!imageUpload || !imageUploadArea || !browseFilesBtn) {
-        console.log('Image upload elements not found');
-        return;
-    }
-
-    // Browse button click handler
-    browseFilesBtn.addEventListener('click', () => {
-        console.log('Browse button clicked');
-        imageUpload.click();
-    });
-
-    // File input change handler
-    imageUpload.addEventListener('change', handleImageUpload);
-    
-    // Drag and drop functionality
-    imageUploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        imageUploadArea.classList.add('dragover');
-    });
-    
-    imageUploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        imageUploadArea.classList.remove('dragover');
-    });
-    
-    imageUploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        imageUploadArea.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        console.log('Files dropped:', files.length);
-        handleImageFiles(files);
-    });
-
-    // Also allow click on the entire upload area
-    imageUploadArea.addEventListener('click', () => {
-        imageUpload.click();
-    });
-
-    console.log('Image upload initialized successfully');
-}
-
-// Handle image upload from file input
-async function handleImageUpload(e) {
-    const files = e.target.files;
-    console.log('Files selected:', files.length);
-    if (files.length > 0) {
-        await handleImageFiles(files);
-        // Reset the input to allow selecting the same files again
-        e.target.value = '';
-    }
-}
-
-// Handle image files with validation and progress
-async function handleImageFiles(files) {
-    const uploadedImagesContainer = document.getElementById('uploadedImages');
-    
-    for (let file of files) {
-        if (file.type.startsWith('image/')) {
-            // Validate file
-            try {
-                validateImageFile(file);
-            } catch (error) {
-                showMessage(error.message, 'error');
-                continue;
+            if (Math.abs(diffX) > 50) {
+                this.switchTabOnSwipe(diffX > 0);
             }
 
-            // Show uploading indicator
-            const tempId = 'temp-' + Date.now();
-            if (uploadedImagesContainer) {
-                uploadedImagesContainer.innerHTML += `
-                    <div class="uploaded-image uploading" id="${tempId}">
-                        <div class="image-placeholder">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <span>Uploading ${file.name}...</span>
-                        </div>
-                    </div>
-                `;
-            }
+            touchStartX = null;
+        });
+    }
 
-            try {
-                console.log('Uploading image:', file.name);
-                const imageUrl = await uploadImage(file);
-                uploadedImages.push(imageUrl);
-                console.log('Image uploaded successfully:', imageUrl);
-                
-                // Replace uploading indicator with actual image
-                const tempElement = document.getElementById(tempId);
-                if (tempElement) {
-                    tempElement.outerHTML = `
-                        <div class="uploaded-image">
-                            <img src="${imageUrl}" alt="Uploaded property image">
-                            <button type="button" class="remove-image" onclick="removeImage(${uploadedImages.length - 1})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                }
-                
-                showMessage(`"${file.name}" uploaded successfully!`, 'success');
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                // Remove the uploading indicator
-                const tempElement = document.getElementById(tempId);
-                if (tempElement) {
-                    tempElement.remove();
-                }
-                showMessage(`Error uploading "${file.name}". Please try again.`, 'error');
-            }
+    switchTabOnSwipe(swipeLeft) {
+        const tabs = Array.from(document.querySelectorAll('.admin-tab'));
+        const activeTab = document.querySelector('.admin-tab.active');
+        const currentIndex = tabs.indexOf(activeTab);
+
+        let newIndex;
+        if (swipeLeft) {
+            // Swipe left - next tab
+            newIndex = (currentIndex + 1) % tabs.length;
         } else {
-            showMessage(`"${file.name}" is not an image. Please select image files only.`, 'error');
+            // Swipe right - previous tab
+            newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        }
+
+        const newTab = tabs[newIndex];
+        if (newTab) {
+            newTab.click();
         }
     }
-}
 
-// Validate individual image file
-function validateImageFile(file) {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-    
-    if (!allowedTypes.includes(file.type)) {
-        throw new Error(`"${file.name}" is not a supported image format. Please use JPEG, PNG, or WebP.`);
-    }
-    if (file.size > maxSize) {
-        throw new Error(`"${file.name}" is too large. Maximum size is 5MB.`);
-    }
-    
-    return true;
-}
-
-// Update uploaded images display
-function updateUploadedImagesDisplay() {
-    const uploadedImagesContainer = document.getElementById('uploadedImages');
-    if (!uploadedImagesContainer) return;
-
-    if (uploadedImages.length === 0) {
-        uploadedImagesContainer.innerHTML = '<p class="no-images">No images uploaded yet</p>';
-        return;
-    }
-
-    uploadedImagesContainer.innerHTML = uploadedImages.map((url, index) => `
-        <div class="uploaded-image">
-            <img src="${url}" alt="Uploaded property image ${index + 1}">
-            <button type="button" class="remove-image" onclick="removeImage(${index})" aria-label="Remove image">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `).join('');
-}
-
-// Remove image from uploaded images
-window.removeImage = function(index) {
-    if (index >= 0 && index < uploadedImages.length) {
-        const removedImage = uploadedImages.splice(index, 1);
-        updateUploadedImagesDisplay();
-        showMessage('Image removed', 'success');
-        console.log('Removed image:', removedImage);
-    }
-};
-
-// Add property form
-const addPropertyForm = document.getElementById('addPropertyForm');
-if (addPropertyForm) {
-    addPropertyForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // Optimize admin forms for mobile
+    optimizeAdminForms() {
+        const adminForms = document.querySelectorAll('#addPropertyForm, .admin-form');
         
-        const formData = new FormData(addPropertyForm);
-        const propertyData = {
-            title: formData.get('title'),
-            location: formData.get('location'),
-            size: formData.get('size'),
-            type: formData.get('type'),
-            price: formData.get('price'),
-            description: formData.get('description'),
-            features: formData.get('features') ? formData.get('features').split(',').map(f => f.trim()).filter(f => f) : [],
-            status: formData.get('status'),
-            featured: formData.get('featured') === 'on',
-            images: uploadedImages
-        };
+        adminForms.forEach(form => {
+            if (this.isMobile) {
+                // Improve form layout for mobile
+                const formGroups = form.querySelectorAll('.form-group');
+                formGroups.forEach(group => {
+                    group.style.marginBottom = '20px';
+                });
 
-        const submitBtn = addPropertyForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding Property...';
-        submitBtn.disabled = true;
+                // Enhance form controls
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.style.minHeight = '44px';
+                    input.style.padding = '12px 15px';
+                    input.style.fontSize = '16px'; // Prevent zoom on iOS
+                });
 
-        try {
-            await propertyService.addProperty(propertyData);
-            showMessage('Property added successfully!', 'success');
-            clearAddPropertyForm(); // Clear form after successful submission
-            loadPropertiesForAdmin();
-        } catch (error) {
-            console.error('Error adding property:', error);
-            showMessage('Error adding property. Please try again.', 'error');
-        } finally {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-        }
-    });
-}
+                // Improve file upload area
+                const fileUpload = form.querySelector('.file-upload');
+                if (fileUpload) {
+                    fileUpload.style.minHeight = '120px';
+                    fileUpload.style.padding = '20px 15px';
+                }
+            }
+        });
+    }
 
-// Load properties for admin
-async function loadPropertiesForAdmin() {
-    const propertiesContainer = document.getElementById('adminProperties');
-    if (!propertiesContainer) return;
-
-    try {
-        const properties = await propertyService.getProperties();
+    // Improve data tables for mobile
+    improveDataTables() {
+        const dataTables = document.querySelectorAll('.data-table');
         
-        propertiesContainer.innerHTML = properties.map(property => `
-            <div class="property-item ${property.status === 'sold' ? 'sold' : ''}">
-                <div class="property-info">
-                    <h4>${property.title}</h4>
-                    <p>${property.location} - ${property.price} - ${property.size}</p>
-                    <p class="property-meta">Type: ${property.type} | Status: ${property.status} | Featured: ${property.featured ? 'Yes' : 'No'}</p>
-                </div>
-                <div class="property-actions">
-                    <button class="btn" onclick="editProperty('${property.id}')">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-danger" onclick="deleteProperty('${property.id}')">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                    ${property.status === 'available' ? `
-                        <button class="btn" onclick="markAsSold('${property.id}')">
-                            <i class="fas fa-tag"></i> Mark Sold
-                        </button>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading properties for admin:', error);
-        propertiesContainer.innerHTML = '<p>Error loading properties</p>';
+        dataTables.forEach(table => {
+            if (this.isMobile) {
+                // Make table scrollable
+                const wrapper = table.closest('.data-table-wrapper') || table.parentElement;
+                wrapper.style.overflowX = 'auto';
+                wrapper.style.webkitOverflowScrolling = 'touch';
+                
+                // Improve table cell spacing
+                const cells = table.querySelectorAll('th, td');
+                cells.forEach(cell => {
+                    cell.style.padding = '12px 8px';
+                    cell.style.minWidth = '100px';
+                });
+
+                // Enhance action buttons
+                const actionCells = table.querySelectorAll('.actions');
+                actionCells.forEach(cell => {
+                    const buttons = cell.querySelectorAll('.btn');
+                    buttons.forEach(button => {
+                        button.style.minHeight = '36px';
+                        button.style.padding = '8px 12px';
+                        button.style.margin = '2px';
+                    });
+                });
+            }
+        });
     }
-}
 
-// Property actions
-window.editProperty = async function(propertyId) {
-    // Implementation for editing property
-    showMessage('Edit functionality coming soon!', 'success');
-};
+    // Enhanced image upload for mobile
+    enhanceImageUpload() {
+        const imageUploadArea = document.getElementById('imageUploadArea');
+        if (!imageUploadArea) return;
 
-window.deleteProperty = async function(propertyId) {
-    if (confirm('Are you sure you want to delete this property?')) {
-        try {
-            await propertyService.deleteProperty(propertyId);
-            showMessage('Property deleted successfully!', 'success');
-            loadPropertiesForAdmin();
-        } catch (error) {
-            console.error('Error deleting property:', error);
-            showMessage('Error deleting property', 'error');
+        if (this.isMobile) {
+            // Improve touch area
+            imageUploadArea.style.minHeight = '120px';
+            imageUploadArea.style.padding = '25px 15px';
+            
+            // Add visual feedback for touch
+            imageUploadArea.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+                this.style.borderColor = '#1e90ff';
+            });
+            
+            imageUploadArea.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+                setTimeout(() => {
+                    this.style.borderColor = '';
+                }, 200);
+            });
+        }
+
+        // Handle image previews for mobile
+        this.optimizeImagePreviews();
+    }
+
+    optimizeImagePreviews() {
+        const uploadedImagesContainer = document.getElementById('uploadedImages');
+        if (!uploadedImagesContainer) return;
+
+        if (this.isMobile) {
+            // Adjust grid for mobile
+            uploadedImagesContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(80px, 1fr))';
+            uploadedImagesContainer.style.gap = '8px';
+            
+            // Improve remove buttons
+            const removeButtons = uploadedImagesContainer.querySelectorAll('.remove-image');
+            removeButtons.forEach(button => {
+                button.style.width = '28px';
+                button.style.height = '28px';
+                button.style.minWidth = '28px';
+                button.style.minHeight = '28px';
+            });
         }
     }
-};
 
-window.markAsSold = async function(propertyId) {
-    try {
-        await propertyService.updateProperty(propertyId, { status: 'sold' });
-        showMessage('Property marked as sold!', 'success');
-        loadPropertiesForAdmin();
-    } catch (error) {
-        console.error('Error updating property:', error);
-        showMessage('Error updating property', 'error');
+    // Admin-specific event listeners
+    addAdminSpecificListeners() {
+        // Handle orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.handleAdminOrientationChange();
+            }, 300);
+        });
+
+        // Refresh admin layout on resize
+        window.addEventListener('resize', () => {
+            this.handleAdminResize();
+        });
+
+        // Improve admin statistics cards for mobile
+        this.enhanceStatCards();
     }
-};
 
-// Load inquiries
-async function loadInquiries() {
-    const inquiriesContainer = document.getElementById('adminInquiries');
-    if (!inquiriesContainer) return;
+    handleAdminOrientationChange() {
+        // Re-initialize mobile enhancements
+        const newIsMobile = this.checkMobile();
+        if (this.isMobile !== newIsMobile) {
+            this.isMobile = newIsMobile;
+            this.init();
+        }
+    }
 
-    try {
-        const inquiries = await inquiryService.getInquiries();
+    handleAdminResize() {
+        const newIsMobile = this.checkMobile();
+        if (this.isMobile !== newIsMobile) {
+            this.isMobile = newIsMobile;
+            this.init();
+        }
+    }
+
+    // Enhance statistics cards for mobile
+    enhanceStatCards() {
+        const statCards = document.querySelectorAll('.stat-card');
         
-        inquiriesContainer.innerHTML = inquiries.map(inquiry => `
-            <div class="inquiry-item ${!inquiry.read ? 'unread' : ''}">
-                <div class="inquiry-info">
-                    <h4>${inquiry.name}</h4>
-                    <p class="inquiry-meta">
-                        ${inquiry.email} | ${inquiry.phone} | 
-                        ${new Date(inquiry.createdAt.seconds * 1000).toLocaleDateString()}
-                    </p>
-                    <p><strong>Interest:</strong> ${inquiry.interest}</p>
-                    ${inquiry.propertyInterested ? `<p><strong>Property:</strong> ${inquiry.propertyInterested}</p>` : ''}
-                    <p>${inquiry.message}</p>
-                </div>
-                <div class="inquiry-actions">
-                    <button class="mark-read ${inquiry.read ? 'read' : ''}" 
-                            onclick="markInquiryAsRead('${inquiry.id}')"
-                            ${inquiry.read ? 'disabled' : ''}>
-                        ${inquiry.read ? 'Read' : 'Mark Read'}
-                    </button>
-                    <a href="mailto:${inquiry.email}" class="btn">
-                        <i class="fas fa-reply"></i> Reply
-                    </a>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading inquiries:', error);
-        inquiriesContainer.innerHTML = '<p>Error loading inquiries</p>';
+        if (this.isMobile) {
+            statCards.forEach(card => {
+                card.style.padding = '20px 15px';
+                card.style.textAlign = 'center';
+                
+                const statNumber = card.querySelector('.stat-number');
+                if (statNumber) {
+                    statNumber.style.fontSize = '1.8rem';
+                    statNumber.style.marginBottom = '8px';
+                }
+                
+                const statLabel = card.querySelector('.stat-label');
+                if (statLabel) {
+                    statLabel.style.fontSize = '0.8rem';
+                }
+            });
+        }
     }
-}
 
-window.markInquiryAsRead = async function(inquiryId) {
-    try {
-        await inquiryService.markInquiryAsRead(inquiryId);
-        showMessage('Inquiry marked as read!', 'success');
-        loadInquiries();
-    } catch (error) {
-        console.error('Error marking inquiry as read:', error);
-        showMessage('Error updating inquiry', 'error');
-    }
-};
-
-// Load testimonials for admin
-async function loadTestimonialsForAdmin() {
-    const testimonialsContainer = document.getElementById('adminTestimonials');
-    if (!testimonialsContainer) return;
-
-    try {
-        const testimonials = await testimonialService.getAllTestimonials();
+    // Utility method to show mobile-optimized messages
+    showMobileMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type} mobile-message`;
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 10000;
+            font-weight: bold;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 0.9rem;
+        `;
         
-        testimonialsContainer.innerHTML = testimonials.map(testimonial => `
-            <div class="property-item ${testimonial.approved ? 'approved' : 'pending'}">
-                <div class="property-info">
-                    <h4>${testimonial.name} - ${testimonial.location}</h4>
-                    <div class="rating">${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}</div>
-                    <p>${testimonial.testimonial}</p>
-                    <p class="property-meta">
-                        ${testimonial.email} | 
-                        ${new Date(testimonial.createdAt.seconds * 1000).toLocaleDateString()} |
-                        Status: ${testimonial.approved ? 'Approved' : 'Pending'}
-                    </p>
-                </div>
-                <div class="property-actions">
-                    ${!testimonial.approved ? `
-                        <button class="btn" onclick="approveTestimonial('${testimonial.id}')">
-                            <i class="fas fa-check"></i> Approve
-                        </button>
-                    ` : ''}
-                    <button class="btn btn-danger" onclick="deleteTestimonial('${testimonial.id}')">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading testimonials for admin:', error);
-        testimonialsContainer.innerHTML = '<p>Error loading testimonials</p>';
+        if (type === 'success') {
+            messageDiv.style.backgroundColor = '#28a745';
+        } else if (type === 'error') {
+            messageDiv.style.backgroundColor = '#dc3545';
+        } else {
+            messageDiv.style.backgroundColor = '#17a2b8';
+        }
+        
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, 4000);
     }
 }
 
-window.approveTestimonial = async function(testimonialId) {
-    try {
-        await testimonialService.approveTestimonial(testimonialId);
-        showMessage('Testimonial approved!', 'success');
-        loadTestimonialsForAdmin();
-    } catch (error) {
-        console.error('Error approving testimonial:', error);
-        showMessage('Error approving testimonial', 'error');
+// Enhanced mobile login for admin
+class AdminMobileLogin {
+    constructor() {
+        this.loginForm = document.getElementById('loginForm');
+        this.init();
     }
-};
 
-window.deleteTestimonial = async function(testimonialId) {
-    if (confirm('Are you sure you want to delete this testimonial?')) {
-        try {
-            // You would need to add a deleteTestimonial function to testimonialService
-            showMessage('Delete functionality coming soon!', 'success');
-        } catch (error) {
-            console.error('Error deleting testimonial:', error);
-            showMessage('Error deleting testimonial', 'error');
+    init() {
+        if (!this.loginForm) return;
+
+        this.enhanceLoginForm();
+        this.addLoginTouchEvents();
+    }
+
+    enhanceLoginForm() {
+        // Improve form layout for mobile
+        const inputs = this.loginForm.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.style.minHeight = '50px';
+            input.style.padding = '15px';
+            input.style.fontSize = '16px';
+            input.style.marginBottom = '15px';
+        });
+
+        const submitBtn = this.loginForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.style.minHeight = '50px';
+            submitBtn.style.padding = '15px';
+            submitBtn.style.fontSize = '1rem';
+            submitBtn.style.fontWeight = '600';
         }
     }
-};
 
-// Load admin data (statistics, etc.)
-async function loadAdminData() {
-    try {
-        const properties = await propertyService.getProperties();
-        const inquiries = await inquiryService.getInquiries();
-        const testimonials = await testimonialService.getAllTestimonials();
+    addLoginTouchEvents() {
+        const inputs = this.loginForm.querySelectorAll('input');
+        
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.style.borderColor = '#1e90ff';
+                input.style.boxShadow = '0 0 0 2px rgba(30, 144, 255, 0.2)';
+            });
 
-        // Update statistics
-        document.getElementById('totalProperties').textContent = properties.length;
-        document.getElementById('availableProperties').textContent = 
-            properties.filter(p => p.status === 'available').length;
-        document.getElementById('newInquiries').textContent = 
-            inquiries.filter(i => !i.read).length;
-        document.getElementById('pendingTestimonials').textContent = 
-            testimonials.filter(t => !t.approved).length;
-
-    } catch (error) {
-        console.error('Error loading admin data:', error);
+            input.addEventListener('blur', () => {
+                input.style.borderColor = '';
+                input.style.boxShadow = '';
+            });
+        });
     }
 }
 
-// Message display function
-function showMessage(message, type) {
-    // Remove any existing messages first
-    const existingMessages = document.querySelectorAll('.message');
-    existingMessages.forEach(msg => msg.remove());
-
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.textContent = message;
-    
-    // Style the message
-    messageDiv.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 5px;
-        color: white;
-        z-index: 1000;
-        font-weight: bold;
-        max-width: 300px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
-    
-    if (type === 'success') {
-        messageDiv.style.backgroundColor = '#28a745';
-    } else if (type === 'error') {
-        messageDiv.style.backgroundColor = '#dc3545';
-    } else {
-        messageDiv.style.backgroundColor = '#17a2b8';
-    }
-    
-    document.body.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        if (messageDiv.parentNode) {
-            messageDiv.parentNode.removeChild(messageDiv);
-        }
-    }, 5000);
-}
-
-// Initialize admin on page load
+// Initialize admin mobile enhancements
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Admin page loaded');
+    // Initialize admin mobile enhancements
+    const adminMobile = new AdminMobileEnhancements();
     
-    // Initialize image upload functionality
-    initializeImageUpload();
-    
-    // Switch to properties tab by default if user is logged in
-    if (auth.currentUser) {
-        switchTab('properties');
-    }
+    // Initialize admin mobile login
+    const adminLogin = new AdminMobileLogin();
+
+    // Add admin mobile styles
+    addAdminMobileStyles();
+
+    console.log('🛠️ Admin mobile enhancements initialized');
 });
+
+// Add admin mobile-specific styles
+function addAdminMobileStyles() {
+    const styles = `
+        /* Admin mobile-specific enhancements */
+        @media (max-width: 768px) {
+            /* Admin navigation */
+            .admin-nav {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .admin-nav a {
+                padding: 12px 15px;
+                text-align: center;
+            }
+            
+            /* Admin tabs */
+            .admin-tabs {
+                flex-direction: column;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            
+            .admin-tab {
+                padding: 15px;
+                border-left: 4px solid transparent;
+                border-bottom: none;
+            }
+            
+            .admin-tab.active {
+                border-left-color: #1e90ff;
+                border-bottom-color: transparent;
+            }
+            
+            /* Statistics grid */
+            .admin-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .stat-card {
+                padding: 20px 15px;
+            }
+            
+            /* Data tables */
+            .data-table-wrapper {
+                margin: 0 10px;
+                border-radius: 8px;
+            }
+            
+            .data-table {
+                min-width: 600px; /* Allow horizontal scroll */
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+            
+            /* Forms */
+            .admin-form {
+                padding: 20px 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            /* Image upload */
+            .file-upload {
+                margin: 0 10px;
+                padding: 20px 15px;
+            }
+            
+            .uploaded-images {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 10px;
+                padding: 0 10px;
+            }
+            
+            /* Inquiry items */
+            .inquiry-item {
+                padding: 15px 12px;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .inquiry-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            /* Property items */
+            .property-item {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .property-actions {
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .property-actions .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* Very small admin screens */
+        @media (max-width: 480px) {
+            .admin-header {
+                padding: 12px 0;
+            }
+            
+            .login-container {
+                margin: 30px 15px;
+                padding: 25px 20px;
+            }
+            
+            .admin-panel {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+        }
+        
+        /* Admin mobile message styles */
+        .mobile-message {
+            animation: slideInDown 0.3s ease;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+        
+        /* Safe area insets for admin */
+        @supports(padding: max(0px)) {
+            .admin-header,
+            .admin-nav,
+            .admin-stats,
+            .admin-tabs,
+            .tab-content {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+            }
+            
+            .login-container {
+                margin-left: max(15px, env(safe-area-inset-left));
+                margin-right: max(15px, env(safe-area-inset-right));
+            }
+        }
+    `;
+
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+}
