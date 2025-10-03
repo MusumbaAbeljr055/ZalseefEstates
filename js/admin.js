@@ -9,12 +9,28 @@ import {
     uploadImage
 } from './firebase-config.js';
 
+// Property Management
+let uploadedImages = [];
+
 // Admin Mobile Toggle Implementation
 function initializeAdminMobileToggle() {
     const adminHeader = document.querySelector('.admin-header');
     const adminNav = document.querySelector('.admin-nav');
     
-    if (!adminHeader || !adminNav) return;
+    console.log('Initializing admin mobile toggle...');
+    console.log('Admin header found:', !!adminHeader);
+    console.log('Admin nav found:', !!adminNav);
+    
+    if (!adminHeader || !adminNav) {
+        console.error('Admin header or nav not found!');
+        return;
+    }
+
+    // Check if toggle already exists
+    if (document.getElementById('adminMobileToggle')) {
+        console.log('Toggle already exists, skipping creation');
+        return;
+    }
 
     // Create mobile toggle button
     const toggleBtn = document.createElement('button');
@@ -31,11 +47,15 @@ function initializeAdminMobileToggle() {
 
     // Add toggle button to header
     adminHeader.appendChild(toggleBtn);
+    
+    console.log('Toggle button created and added to header');
 
     // Toggle functionality
     toggleBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const isExpanded = adminNav.classList.toggle('active');
+        console.log('Toggle clicked, menu active:', isExpanded);
+        
         toggleBtn.innerHTML = isExpanded ? 
             '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         toggleBtn.classList.toggle('active');
@@ -46,6 +66,7 @@ function initializeAdminMobileToggle() {
 
     // Close menu when clicking backdrop
     backdrop.addEventListener('click', () => {
+        console.log('Backdrop clicked, closing menu');
         adminNav.classList.remove('active');
         toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
         toggleBtn.classList.remove('active');
@@ -59,6 +80,7 @@ function initializeAdminMobileToggle() {
         if (adminNav.classList.contains('active') && 
             !adminNav.contains(e.target) && 
             !toggleBtn.contains(e.target)) {
+            console.log('Clicked outside, closing menu');
             adminNav.classList.remove('active');
             toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
             toggleBtn.classList.remove('active');
@@ -71,6 +93,7 @@ function initializeAdminMobileToggle() {
     // Close menu on escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && adminNav.classList.contains('active')) {
+            console.log('Escape key pressed, closing menu');
             adminNav.classList.remove('active');
             toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
             toggleBtn.classList.remove('active');
@@ -83,6 +106,7 @@ function initializeAdminMobileToggle() {
     // Close menu on window resize (if resizing to larger screen)
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768 && adminNav.classList.contains('active')) {
+            console.log('Window resized to larger screen, closing menu');
             adminNav.classList.remove('active');
             toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
             toggleBtn.classList.remove('active');
@@ -92,7 +116,40 @@ function initializeAdminMobileToggle() {
         }
     });
 
-    console.log('Admin mobile toggle initialized');
+    console.log('Admin mobile toggle initialized successfully');
+}
+
+// Add temporary navigation if none exists
+function ensureNavigationExists() {
+    const adminNav = document.querySelector('.admin-nav');
+    if (!adminNav) return;
+    
+    // Only add navigation if it's empty
+    if (adminNav.children.length === 0) {
+        adminNav.innerHTML = `
+            <a href="../index.html" class="nav-home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="../properties.html" class="nav-properties">
+                <i class="fas fa-building"></i>
+                <span>Properties</span>
+            </a>
+            <a href="../testimonials.html" class="nav-testimonials">
+                <i class="fas fa-star"></i>
+                <span>Testimonials</span>
+            </a>
+            <a href="../contact.html" class="nav-contact">
+                <i class="fas fa-envelope"></i>
+                <span>Contact</span>
+            </a>
+            <button id="logoutBtn" class="admin-logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        `;
+        console.log('Navigation links added to admin panel');
+    }
 }
 
 // Admin authentication state
@@ -103,8 +160,9 @@ onAuthStateChanged(auth, (user) => {
         loadAdminData();
         clearLoginForm(); // Clear login form after successful login
         
-        // Initialize mobile toggle after user is authenticated
+        // Ensure navigation exists and initialize mobile toggle
         setTimeout(() => {
+            ensureNavigationExists();
             initializeAdminMobileToggle();
         }, 100);
     } else {
@@ -114,7 +172,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// [REST OF YOUR EXISTING CODE REMAINS EXACTLY THE SAME...]
 // Login form handler
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
@@ -278,9 +335,6 @@ function switchTab(tabName) {
             break;
     }
 }
-
-// Property Management
-let uploadedImages = [];
 
 // Initialize image upload functionality
 function initializeImageUpload() {
@@ -728,6 +782,9 @@ function showMessage(message, type) {
 // Initialize admin on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Admin page loaded');
+    
+    // Ensure navigation exists
+    ensureNavigationExists();
     
     // Initialize image upload functionality
     initializeImageUpload();
