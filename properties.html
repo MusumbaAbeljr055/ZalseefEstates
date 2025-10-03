@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties - Zalseef Estates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/zalseef.jpg" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <a href="index.html" class="logo" aria-label="Zalseef Estates Home">
+                <img src="images/zalseef.jpg" alt="Zalseef Estates Logo" class="logo-img">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu" role="navigation">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="properties.html" class="active" aria-current="page">Properties</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="charity.html">Charity</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html" class="admin-link">Admin</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Properties Page Header -->
+    <section class="hero" style="height: 60vh; margin-top: 70px;">
+        <div class="hero-slideshow" aria-hidden="true">
+            <div class="hero-slide slide-1 active"></div>
+        </div>
+        <div class="hero-content container">
+            <h1>Available Properties</h1>
+            <p>Explore our premium land plots in prime locations across Mbarara</p>
+        </div>
+    </section>
+
+    <!-- Property Search -->
+    <section class="property-search">
+        <div class="container">
+            <h2 class="section-title">Find Your Perfect Land</h2>
+            <form class="search-form" id="propertySearch">
+                <input type="text" placeholder="Location (e.g., Karubanda)" aria-label="Search by location" id="searchLocation">
+                <select aria-label="Property type" id="searchType">
+                    <option value="">All Types</option>
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="investment">Investment</option>
+                </select>
+                <select aria-label="Price range" id="searchPrice">
+                    <option value="">All Prices</option>
+                    <option value="0-5000000">Up to UGX 5M</option>
+                    <option value="5000000-7000000">UGX 5M - 7M</option>
+                    <option value="7000000-10000000">UGX 7M - 10M</option>
+                    <option value="10000000+">Above UGX 10M</option>
+                </select>
+                <select aria-label="Status" id="searchStatus">
+                    <option value="">All Status</option>
+                    <option value="available">Available</option>
+                    <option value="sold">Sold</option>
+                </select>
+                <button type="submit" aria-label="Search properties"><i class="fas fa-search"></i> Search</button>
+            </form>
+
+            <!-- Filter Tags -->
+            <div class="filter-tags" id="filterTags">
+                <div class="filter-tag active" data-filter="all">All Properties</div>
+                <div class="filter-tag" data-filter="available">Available</div>
+                <div class="filter-tag" data-filter="sold">Sold</div>
+                <div class="filter-tag" data-filter="featured">Featured</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Properties -->
+    <section class="properties-container">
+        <div class="container">
+            <h2 class="section-title">All Properties</h2>
+            <div class="properties" id="allProperties">
+                <div class="spinner" id="loadingSpinner"></div>
+                <!-- Properties will be loaded dynamically from Firebase -->
+            </div>
+            <div id="noPropertiesMessage" class="message" style="display: none;">
+                <p>No properties found matching your criteria.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Property Modal -->
+    <div class="modal" id="propertyModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()" aria-label="Close modal">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <section class="contact" style="padding: 60px 20px;">
+        <div class="container text-center">
+            <h2>Interested in a Property?</h2>
+            <p>Contact us today to schedule a site visit or get more information</p>
+            <a href="contact.html" class="btn btn-outline">Contact Us Now</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Zalseef Estates. All Rights Reserved.</p>
+            <p>We buy and sell plots of land, and part of our profits goes to charity.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a> | 
+                <a href="terms.html">Terms of Service</a> |
+                <a href="charity.html">Our Charity Work</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/properties.js"></script>
+</body>
+</html>

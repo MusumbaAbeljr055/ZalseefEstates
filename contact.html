@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Zalseef Estates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/zalseef.jpg" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <a href="index.html" class="logo" aria-label="Zalseef Estates Home">
+                <img src="images/zalseef.jpg" alt="Zalseef Estates Logo" class="logo-img">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu" role="navigation">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="properties.html">Properties</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="charity.html">Charity</a></li>
+                <li><a href="contact.html" class="active" aria-current="page">Contact</a></li>
+                <li><a href="admin.html" class="admin-link">Admin</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Contact Page Header -->
+    <section class="hero" style="height: 60vh; margin-top: 70px;">
+        <div class="hero-slideshow" aria-hidden="true">
+            <div class="hero-slide slide-1 active"></div>
+        </div>
+        <div class="hero-content container">
+            <h1>Contact Us</h1>
+            <p>Get in touch with our team for any inquiries or to schedule a site visit</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p>Reach out to us for inquiries or to schedule a site visit. We're here to help you find your perfect land.</p>
+
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        <div class="contact-details">
+                            <h4>Office Location</h4>
+                            <p>St Paul Shopping Mall, Room C10</p>
+                            <p>Mbarara, Uganda</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                        <div class="contact-details">
+                            <h4>Call Us</h4>
+                            <p><a href="tel:+256708124902">+256 708 124902</a></p>
+                            <p>Mon-Sat: 8:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <div class="contact-details">
+                            <h4>Email Us</h4>
+                            <p><a href="mailto:zalseefmhd256@gmail.com">zalseefmhd256@gmail.com</a></p>
+                            <p>We respond within 24 hours</p>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="https://www.youtube.com/@ZalseefEstates" target="_blank" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://wa.me/256708124902" target="_blank" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@zalseef_estates" target="_blank" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://www.instagram.com/zalseef_estates" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+
+                    <div class="office-hours">
+                        <h4>Office Hours</h4>
+                        <p>Monday - Friday 24/7</p>
+                    </div>
+                </div>
+
+                <form id="contactForm" action="https://formspree.io/f/xyznjaeq" method="POST">
+                    <h3>Send Us a Message</h3>
+                    
+                    <div id="formMessage" class="message" style="display: none;"></div>
+                    
+                    <input type="text" name="name" placeholder="Your Full Name" required aria-label="Your name">
+                    <input type="email" name="email" placeholder="Your Email" required aria-label="Your email">
+                    <input type="tel" name="phone" placeholder="Phone Number" aria-label="Your phone number">
+                    
+                    <select name="interest" required aria-label="Your interest">
+                        <option value="" disabled selected>I'm interested in...</option>
+                        <option value="buying">Buying Land</option>
+                        <option value="selling">Selling Land</option>
+                        <option value="investment">Investment Opportunity</option>
+                        <option value="site_visit">Schedule Site Visit</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <select name="property_interested" id="propertyInterested" aria-label="Property interested in" style="display: none;">
+                        <option value="" disabled selected>Select Property</option>
+                        <!-- Properties will be populated dynamically -->
+                    </select>
+
+                    <textarea name="message" placeholder="Your Message..." required aria-label="Your message" rows="5"></textarea>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="newsletter" value="yes" checked> 
+                            Send me updates about new properties and offers
+                        </label>
+                    </div>
+
+                    <!-- Hidden field for better email organization -->
+                    <input type="hidden" name="_subject" value="New Land Inquiry from Zalseef Estates Website">
+                    <input type="hidden" name="_format" value="plain">
+                    
+                    <button type="submit" aria-label="Send message" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Map -->
+    <section class="location">
+        <div class="container">
+            <h2 class="section-title">Visit Our Office</h2>
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.746684393895!2d30.6599565!3d-0.60827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19d91b002818a913%3A0xab63f36fc3ccc916!2sSt%20Paul%20Shopping%20Mall!5e0!3m2!1sen!2sus!4v1719876543210!5m2!1sen!2sus"
+                    title="Zalseef Estates Location" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="text-center">
+                <a href="https://maps.google.com/?q=St+Paul+Shopping+Mall,Kampala" target="_blank" class="btn">
+                    <i class="fas fa-directions"></i> Get Directions
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>How do I schedule a site visit?</h3>
+                    <p>Contact us via phone, WhatsApp, or fill out the contact form. We'll arrange a convenient time for your site visit.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What documents do I need?</h3>
+                    <p>For land purchase, you'll need a valid ID. We handle all the legal documentation and title transfers.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you offer payment plans?</h3>
+                    <p>Yes, we offer flexible payment plans for qualified buyers. Contact us to discuss available options.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How long does the process take?</h3>
+                    <p>Typically 2-4 weeks from agreement to completion, depending on documentation and payments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Zalseef Estates. All Rights Reserved.</p>
+            <p>We buy and sell plots of land, and part of our profits goes to charity.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a> | 
+                <a href="terms.html">Terms of Service</a> |
+                <a href="charity.html">Our Charity Work</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+</body>
+</html>

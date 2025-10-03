@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonials - Zalseef Estates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/zalseef.jpg" type="image/png">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <a href="index.html" class="logo" aria-label="Zalseef Estates Home">
+                <img src="images/zalseef.jpg" alt="Zalseef Estates Logo" class="logo-img">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu" role="navigation">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="properties.html">Properties</a></li>
+                <li><a href="testimonials.html" class="active" aria-current="page">Testimonials</a></li>
+                <li><a href="charity.html">Charity</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html" class="admin-link">Admin</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Testimonials Page Header -->
+    <section class="hero" style="height: 60vh; margin-top: 70px;">
+        <div class="hero-slideshow" aria-hidden="true">
+            <div class="hero-slide slide-2 active"></div>
+        </div>
+        <div class="hero-content container">
+            <h1>Client Testimonials</h1>
+            <p>See what our satisfied clients have to say about their experience with Zalseef Estates</p>
+        </div>
+    </section>
+
+    <!-- All Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonial-grid" id="allTestimonials">
+                <div class="spinner" id="loadingSpinner"></div>
+                <!-- Testimonials will be loaded dynamically from Firebase -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Testimonial Form -->
+    <section class="contact">
+        <div class="container">
+            <h2 class="section-title">Share Your Experience</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>We Value Your Feedback</h3>
+                    <p>Your experience helps us improve and helps others make informed decisions. Share your story with
+                        us!</p>
+                    <div>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <div>
+                            <h4>Honest Reviews</h4>
+                            <p>We appreciate genuine feedback from our clients</p>
+                        </div>
+                    </div>
+                    <div>
+                        <i class="fas fa-shield-alt" style="color: #2196F3;"></i>
+                        <div>
+                            <h4>Verified Clients</h4>
+                            <p>All testimonials are from verified customers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="testimonialForm" action="https://formspree.io/f/YOUR_TESTIMONIAL_FORM_ID" method="POST">
+                    <h3 style="color: #064663; margin-bottom: 20px;">Add Your Testimonial</h3>
+
+                    <input type="text" name="name" placeholder="Your Full Name" required aria-label="Your name">
+                    <input type="text" name="location" placeholder="Your Location" required aria-label="Your location">
+                    <input type="email" name="email" placeholder="Your Email" required aria-label="Your email">
+
+                    <div class="form-group">
+                        <label for="rating" style="color: #064663; display: block; margin-bottom: 10px;">Your
+                            Rating</label>
+                        <div class="rating-input" style="text-align: center; margin: 15px 0;">
+                            <span class="star" data-rating="1"
+                                style="cursor: pointer; font-size: 1.5rem; margin: 0 5px; color: #ddd;">★</span>
+                            <span class="star" data-rating="2"
+                                style="cursor: pointer; font-size: 1.5rem; margin: 0 5px; color: #ddd;">★</span>
+                            <span class="star" data-rating="3"
+                                style="cursor: pointer; font-size: 1.5rem; margin: 0 5px; color: #ddd;">★</span>
+                            <span class="star" data-rating="4"
+                                style="cursor: pointer; font-size: 1.5rem; margin: 0 5px; color: #ddd;">★</span>
+                            <span class="star" data-rating="5"
+                                style="cursor: pointer; font-size: 1.5rem; margin: 0 5px; color: #ddd;">★</span>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingValue" required>
+                    </div>
+
+                    <textarea name="testimonial" placeholder="Share your experience with Zalseef Estates..." required
+                        aria-label="Your testimonial" rows="5"></textarea>
+
+                    <!-- Hidden fields for better email organization -->
+                    <input type="hidden" name="_subject" value="New Testimonial Submission - Zalseef Estates">
+                    <input type="hidden" name="_format" value="plain">
+
+                    <button type="submit" aria-label="Submit testimonial">
+                        <i class="fas fa-paper-plane"></i> Submit Testimonial
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Zalseef Estates. All Rights Reserved.</p>
+            <p>We buy and sell plots of land, and part of our profits goes to charity.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a> |
+                <a href="terms.html">Terms of Service</a> |
+                <a href="charity.html">Our Charity Work</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+</body>
+
+</html>

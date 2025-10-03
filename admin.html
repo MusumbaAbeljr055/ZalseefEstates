@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Zalseef Estates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" href="images/zalseef.jpg" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <a href="index.html" class="logo" aria-label="Zalseef Estates Home">
+                <img src="images/zalseef.jpg" alt="Zalseef Estates Logo" class="logo-img">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu" role="navigation">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="properties.html">Properties</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="charity.html">Charity</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="admin.html" class="admin-link active" aria-current="page">Admin</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Admin Section -->
+    <section style="padding: 100px 20px 50px; min-height: 80vh;">
+        <div class="container">
+            <!-- Login Section -->
+            <div id="loginSection">
+                <div class="login-container">
+                    <div class="login-form">
+                        <h2>Admin Login</h2>
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <input type="email" id="email" placeholder="Admin Email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="password" placeholder="Password" required>
+                            </div>
+                            <button type="submit">Sign In</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel (hidden until login) -->
+            <div id="adminSection" class="hidden">
+                <div class="admin-header">
+                    <div class="container">
+                        <h1>Admin Panel</h1>
+                        <p>Manage properties, inquiries, and testimonials</p>
+                        <button id="logoutBtn" class="btn btn-danger">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <!-- Admin Stats -->
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <span class="stat-number" id="totalProperties">0</span>
+                            <span class="stat-label">Total Properties</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="availableProperties">0</span>
+                            <span class="stat-label">Available Properties</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="newInquiries">0</span>
+                            <span class="stat-label">New Inquiries</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="pendingTestimonials">0</span>
+                            <span class="stat-label">Pending Testimonials</span>
+                        </div>
+                    </div>
+
+                    <!-- Admin Tabs -->
+                    <div class="admin-tabs">
+                        <button class="admin-tab active" data-tab="properties">Properties</button>
+                        <button class="admin-tab" data-tab="inquiries">Inquiries</button>
+                        <button class="admin-tab" data-tab="testimonials">Testimonials</button>
+                    </div>
+
+                    <!-- Properties Tab -->
+                    <div id="propertiesTab" class="tab-content active">
+                        <div class="admin-panel">
+                            <h3>Add New Property</h3>
+                            <form id="addPropertyForm" class="admin-form">
+                                <div class="form-group">
+                                    <label for="title">Property Title</label>
+                                    <input type="text" id="title" name="title" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="location">Location</label>
+                                    <input type="text" id="location" name="location" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="size">Size</label>
+                                    <input type="text" id="size" name="size" placeholder="e.g., 25x70 ft" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="type">Type</label>
+                                    <select id="type" name="type" required>
+                                        <option value="residential">Residential</option>
+                                        <option value="commercial">Commercial</option>
+                                        <option value="investment">Investment</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input type="text" id="price" name="price" placeholder="e.g., UGX 7,000,000" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" name="description" required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="features">Features (comma separated)</label>
+                                    <input type="text" id="features" name="features" placeholder="e.g., Road Access, Clear Title, Near Market">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select id="status" name="status" required>
+                                        <option value="available">Available</option>
+                                        <option value="sold">Sold</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="featured"> Featured Property
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Property Images</label>
+                                    <div class="file-upload" id="imageUploadArea">
+                                        <div class="upload-icon">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </div>
+                                        <p>Drag & drop images here or click to browse</p>
+                                        <input type="file" id="imageUpload" multiple accept="image/*" style="display: none;">
+                                    </div>
+                                    <div class="upload-options">
+                                        <button type="button" id="browseFilesBtn" class="btn btn-secondary">
+                                            <i class="fas fa-folder-open"></i> Browse Files
+                                        </button>
+                                        <span class="upload-hint">or drag and drop images here</span>
+                                    </div>
+                                    <div class="uploaded-images" id="uploadedImages"></div>
+                                </div>
+
+                                <button type="submit" class="btn">
+                                    <i class="fas fa-plus"></i> Add Property
+                                </button>
+                            </form>
+
+                            <div class="property-list">
+                                <h3>Manage Properties</h3>
+                                <div id="adminProperties">
+                                    <!-- Properties will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inquiries Tab -->
+                    <div id="inquiriesTab" class="tab-content">
+                        <div class="admin-panel">
+                            <h3>Customer Inquiries</h3>
+                            <div class="inquiry-list" id="adminInquiries">
+                                <!-- Inquiries will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonials Tab -->
+                    <div id="testimonialsTab" class="tab-content">
+                        <div class="admin-panel">
+                            <h3>Manage Testimonials</h3>
+                            <div class="property-list" id="adminTestimonials">
+                                <!-- Testimonials will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Zalseef Estates. All Rights Reserved.</p>
+            <p>We buy and sell plots of land, and part of our profits goes to charity.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="js/admin.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+</body>
+</html>
